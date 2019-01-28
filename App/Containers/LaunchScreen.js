@@ -1,24 +1,40 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, Image, View } from 'react-native'
-import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
+import { Text, Image, View, Animated } from 'react-native'
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
-import { Images } from '../Themes'
+import { Images, Colors, Fonts } from '../Themes'
 
 // Styles
 import styles from './Styles/LaunchScreenStyles'
 
 class LaunchScreen extends Component {
+  state = {
+    animation: new Animated.Value(1),
+    opacityAnimation: new Animated.Value(0)
+  }
+
   componentDidMount() {
+    Animated.sequence([
+      Animated.timing(this.state.animation, {
+        toValue: 2,
+        duration: 600
+      }),
+      Animated.timing(this.state.opacityAnimation, {
+        toValue: 1,
+        duration: 600
+      }),
+    ]).start(() => this.setAuth());
+  }
+
+  setAuth = () => {
     const auth = this.props.firebase.auth();
     const { navigation } = this.props;
     auth.onAuthStateChanged(function(user) {
       if (user) {
-        navigation.navigate('HomeScreen')
+        navigation.navigate('HomeScreen');
       } else {
-        console.log("User is not signed in.")
         auth.signInAnonymously()
         .then(() => navigation.navigate('HomeScreen'))
         .catch(function(error) {
@@ -29,24 +45,31 @@ class LaunchScreen extends Component {
   }
 
   render () {
+    const opacityInterpolate = this.state.opacityAnimation.interpolate({
+      inputRange: [0,1],
+      outputRange: [0,1]
+    });
+
+    const animatedStyles = {
+      transform: [
+        { scale: this.state.animation }
+      ]
+    };
+
     return (
-      <View style={styles.mainContainer}>
-        <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
-        <ScrollView style={styles.container}>
-          <View style={styles.centered}>
-            <Image source={Images.launch} style={styles.logo} />
-          </View>
-
-          <View style={styles.section} >
-            <Image source={Images.ready} />
-            <Text style={styles.sectionText}>
-              This probably isn't what your app is going to look like. Unless your designer handed you this screen and, in that case, congrats! You're ready to ship. For everyone else, this is where you'll see a live preview of your fully functioning app using Ignite.
-            </Text>
-          </View>
-
-          <DevscreensButton />
-        </ScrollView>
+      <View style={[{ flex: 1 }, styles.centered,]}>
+        <Animated.View style={[animatedStyles]}>
+          <Image source={Images.logoNew} style={styles.logo} />
+        </Animated.View>
+        <Animated.View 
+          style={[{textAlign: 'center', paddingTop: 40 }, {opacity: opacityInterpolate}]}
+        >
+          <Text style={{ color: Colors.fire, fontSize: Fonts.size.h6 }}>
+            Daily Taskinator
+          </Text>
+        </Animated.View>
       </View>
+      
     )
   }
 }
