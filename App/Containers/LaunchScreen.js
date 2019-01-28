@@ -1,13 +1,33 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, Image, View } from 'react-native'
 import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
+import { connect } from 'react-redux';
+import { firebaseConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 
 import { Images } from '../Themes'
 
 // Styles
 import styles from './Styles/LaunchScreenStyles'
 
-export default class LaunchScreen extends Component {
+class LaunchScreen extends Component {
+  componentDidMount() {
+    const auth = this.props.firebase.auth();
+    const { navigation } = this.props;
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        navigation.navigate('HomeScreen')
+      } else {
+        console.log("User is not signed in.")
+        auth.signInAnonymously()
+        .then(() => navigation.navigate('HomeScreen'))
+        .catch(function(error) {
+          console.error(error);
+        });
+      }
+    });
+  }
+
   render () {
     return (
       <View style={styles.mainContainer}>
@@ -30,3 +50,18 @@ export default class LaunchScreen extends Component {
     )
   }
 }
+
+export default compose(
+  firebaseConnect(() => {
+    return [
+      
+    ]
+  }),
+  connect(
+    (state) => {
+      return {
+
+      }
+    } 
+  )
+)(LaunchScreen)
