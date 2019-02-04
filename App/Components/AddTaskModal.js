@@ -1,49 +1,60 @@
 import React, { Component } from 'react';
 import { View, Text, Modal, TouchableOpacity, Keyboard } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
-import { TextField } from 'react-native-material-textfield';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import Icon from 'react-native-vector-icons/AntDesign'
-import { Colors, Fonts } from '../Themes'
+import Icon from 'react-native-vector-icons/AntDesign';
+import { Colors, Fonts } from '../Themes';
+import Input from './Input';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
+const validationSchema = yup.object().shape({
+  taskName: yup.string().label('Task Name').required(),
+  category: yup.string().label('Category').required()
+});
 
 
 export default class AddTaskModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startTime: '',
-      endTime: '',
       isStartDateTimePickerVisible: false,
       isEndDateTimePickerVisible: false,
-      taskName: '',
-      taskContent: '',
-      taskCategory: ''
     };
   }
 
-  _showStartDateTimePicker = () => { Keyboard.dismiss(); this.setState({ isStartDateTimePickerVisible: true });}
+  _showStartDateTimePicker = (formikProps) => { 
+    Keyboard.dismiss(); 
+    this.setState({ isStartDateTimePickerVisible: true, formikProps });
+  }
 
-  _hideStartDateTimePicker = () => this.setState({ isStartDateTimePickerVisible: false });
+  _hideStartDateTimePicker = () => this.setState({ isStartDateTimePickerVisible : false });
 
   _handleStartDatePicked = (date) => {
     let cusdate = date;
     let startTime = cusdate.getHours() + ":" + cusdate.getMinutes();
-    console.log('starttime ', startTime)
-    this.setState({ startTime })
+    
+    this.state.formikProps.setFieldValue('startTime', startTime);
     this._hideStartDateTimePicker();
   };
 
-  _showEndDateTimePicker = () => { Keyboard.dismiss(); this.setState({ isEndDateTimePickerVisible: true });}
+  _showEndDateTimePicker = (formikProps) => { 
+    Keyboard.dismiss(); 
+    this.setState({ isEndDateTimePickerVisible: true, formikProps });
+  }
 
-  _hideEndDateTimePicker = () => this.setState({ isEndDateTimePickerVisible: false });
+  _hideEndDateTimePicker = () => this.setState({ 
+    isEndDateTimePickerVisible: false 
+  });
 
   _handleEndDatePicked = (date) => {
     let cusdate = date;
-    let endTime = cusdate.getHours() + ":" + cusdate.getMinutes();
-    console.log('starttime ', endTime)
-    this.setState({ endTime })
-    this._hideStartDateTimePicker();
+    const hours = date.getHours()
+    const mins = ('0' + cusdate.getMinutes()).slice(-2);
+    let endTime = hours + ":" + mins;
+    
+    this.state.formikProps.setFieldValue('endTime', endTime);
+    this._hideEndDateTimePicker();
   };
 
   onChangeCategory = (cat) => {
@@ -89,50 +100,58 @@ export default class AddTaskModal extends Component {
                 />
               </TouchableOpacity>
             </View>
-            <Dropdown
-              label='Select Categories'
-              data={data}
-              baseColor={ Colors.bloodOrange }
-              onChangeText={this.onChangeCategory}
-            />
-            <TextField
-              label='Task Name'
-              baseColor={Colors.bloodOrange}
-              tintColor={Colors.bloodOrange}
-              placeholderTextColor={Colors.bloodOrange}
-              inputContainerStyle={{ borderBottomColor: Colors.bloodOrange }}
-              onChangeText={(taskName) => this.setState({taskName})}
-            />
-            <TextField
-              label='Task Content'
-              baseColor={Colors.bloodOrange}
-              multiline={true}
-              tintColor={Colors.bloodOrange}
-              placeholderTextColor={Colors.bloodOrange}
-              inputContainerStyle={{ borderBottomColor: Colors.bloodOrange }}
-              onChangeText={(taskContent) => this.setState({taskContent})}
-            />
-            <TextField
-              label='Start Time'
-              baseColor={Colors.bloodOrange}
-              onFocus={this._showStartDateTimePicker}
-              value={this.state.startTime}
-              multiline={true}
-              inputContainerStyle={{ borderBottomColor: Colors.bloodOrange }}
-            />
-            <TextField
-              label='End Time'
-              baseColor={Colors.bloodOrange}
-              onFocus={this._showEndDateTimePicker}
-              value={this.state.endTime}
-              multiline={true}
-              inputContainerStyle={{ borderBottomColor: Colors.bloodOrange}}
-            />
-            <TouchableOpacity
-              style={{ width: 150, borderRadius: 5, backgroundColor: Colors.bloodOrange, padding: 10, alignSelf: 'center', marginTop: 60 }}
+            <Formik
+              initialValues={{ category: '', taskName: '', taskContent: '', startTime: '', endTime: '' }}
+              onSubmit={(values, actions) => {
+                console.log('Form Values ', values)
+              }}
+              validationSchema={validationSchema}
             >
-              <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Save</Text>
-            </TouchableOpacity>
+
+              {formikProps => (
+                <React.Fragment>  
+                  <Dropdown
+                    label='Select Categories *'
+                    data={data}
+                    baseColor={ Colors.bloodOrange }
+                    onChangeText={(value) => {formikProps.setFieldValue('category', value);}}
+                  />
+                  <Text style={{ color: 'red' }}>
+                    {formikProps.touched['category'] && formikProps.errors['category']}
+                  </Text>
+                  <Input
+                    label={'Task Name *'}
+                    onChangeText={formikProps.handleChange('taskName')}
+                    onBlur={formikProps.handleBlur('taskName')}
+                  />
+                  <Text style={{ color: 'red' }}>
+                    {formikProps.touched['taskName'] && formikProps.errors['taskName']}
+                  </Text>
+                  <Input
+                    label={'Task Content'}
+                    multiline={true}
+                    onChangeText={formikProps.handleChange('taskContent')}
+                  />
+                  <Input
+                    label={'Start Time'}
+                    onFocus={() => this._showStartDateTimePicker(formikProps)}
+                    value={formikProps.values['startTime']}
+                  />
+                  <Input
+                    label={'End Time'}
+                    onFocus={() => this._showEndDateTimePicker(formikProps)}
+                    value={formikProps.values['endTime']}
+                  />
+                  <TouchableOpacity
+                    style={{ width: 150, borderRadius: 5, backgroundColor: Colors.bloodOrange, padding: 10, alignSelf: 'center', marginTop: 60 }}
+                    onPress={formikProps.handleSubmit}
+                  >
+                    <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Save</Text>
+                  </TouchableOpacity>
+                </React.Fragment>  
+              )}
+
+            </Formik>
             <DateTimePicker
               isVisible={this.state.isStartDateTimePickerVisible}
               mode="time"

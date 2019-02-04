@@ -18,7 +18,7 @@ class LaunchScreen extends Component {
   componentDidMount() {
     Animated.sequence([
       Animated.timing(this.state.animation, {
-        toValue: 2,
+        toValue: 3,
         duration: 600
       }),
       Animated.timing(this.state.opacityAnimation, {
@@ -62,7 +62,7 @@ class LaunchScreen extends Component {
           <Image source={Images.logoNew} style={styles.logo} />
         </Animated.View>
         <Animated.View 
-          style={[{textAlign: 'center', paddingTop: 40 }, {opacity: opacityInterpolate}]}
+          style={[{textAlign: 'center', paddingTop: 60 }, {opacity: opacityInterpolate}]}
         >
           <Text style={{ color: Colors.fire, fontSize: Fonts.size.h6 }}>
             Daily Taskinator

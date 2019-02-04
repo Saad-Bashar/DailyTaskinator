@@ -4,6 +4,7 @@ import CalendarStrip from 'react-native-calendar-strip';
 import { Colors } from '../Themes'
 import Icon from 'react-native-vector-icons/AntDesign'
 import AddTaskModal from '../Components/AddTaskModal';
+import moment from 'moment'
 
 
 export default class HomeScreen extends Component {
@@ -11,12 +12,21 @@ export default class HomeScreen extends Component {
     super(props);
     this.state = {
       modalVisible: false,
+      selectedDate: moment().format('YYYY-MM-DD')
     };
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
+  }
+
+  onDateChange = (value) => {
+    const selectedDate =  moment(value, "YYYY-MM-DD").format("YYYY-MM-DD");
+    this.setState({
+      selectedDate
+    })
+
   }
 
   render() {
@@ -32,6 +42,7 @@ export default class HomeScreen extends Component {
           highlightDateNumberStyle={{color: '#fff', fontSize:15, backgroundColor:Colors.bloodOrange, width:40, height:30, paddingTop:5}}
           highlightDateNameStyle={{color: '#fff', fontSize:12, backgroundColor:Colors.bloodOrange, width:40, height:20, paddingTop:5}}
           iconContainer={{flex: 0.1}}
+          onDateSelected={this.onDateChange}
         />
         <TouchableOpacity
           style={{ position: 'absolute', bottom: 30, alignSelf: 'center'  }}
@@ -48,6 +59,7 @@ export default class HomeScreen extends Component {
         <AddTaskModal
           visible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
+          selectedDate={this.state.selectedDate}
         />
       </View>
     );
