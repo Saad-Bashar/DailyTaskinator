@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { View, LayoutAnimation, TouchableOpacity } from 'react-native';
-import CalendarStrip from 'react-native-calendar-strip';
-import { Colors } from '../Themes'
-import Icon from 'react-native-vector-icons/AntDesign'
-import AddTaskModal from '../Components/AddTaskModal';
+import { View, LayoutAnimation, Text } from 'react-native';
+import AddTaskModal from './AddTaskModal';
 import moment from 'moment'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase';
+import { compose } from 'redux'
+import { connect } from 'react-redux';
+import Calendar from '../Components/Calendar';
+import RoundedIcon from '../Components/RoundedIcon';
 
-
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,6 +16,7 @@ export default class HomeScreen extends Component {
       selectedDate: moment().format('YYYY-MM-DD')
     };
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    props.navigation.setParams({ selectedDate: moment().format('YYYY-MM-DD') })
   }
 
   setModalVisible = (visible) => {
@@ -25,37 +27,15 @@ export default class HomeScreen extends Component {
     const selectedDate =  moment(value, "YYYY-MM-DD").format("YYYY-MM-DD");
     this.setState({
       selectedDate
-    })
-
+    });
+    this.props.navigation.setParams({ selectedDate });
   }
 
   render() {
-    return (
+    return ( 
       <View style={{ flex: 1 }}>
-        <CalendarStrip
-          calendarAnimation={{type: 'sequence', duration: 300}}
-          style={{height: 100, paddingTop: 20, paddingBottom: 10}}
-          calendarHeaderStyle={{color: Colors.bloodOrange, paddingBottom: 10, fontSize:12, fontWeight:'800' }}
-          calendarColor={'#fff'}
-          dateNumberStyle={{color: Colors.bloodOrange, fontSize:15, paddingTop:5}}
-          dateNameStyle={{color: Colors.bloodOrange, fontSize:12}}
-          highlightDateNumberStyle={{color: '#fff', fontSize:15, backgroundColor:Colors.bloodOrange, width:40, height:30, paddingTop:5}}
-          highlightDateNameStyle={{color: '#fff', fontSize:12, backgroundColor:Colors.bloodOrange, width:40, height:20, paddingTop:5}}
-          iconContainer={{flex: 0.1}}
-          onDateSelected={this.onDateChange}
-        />
-        <TouchableOpacity
-          style={{ position: 'absolute', bottom: 30, alignSelf: 'center'  }}
-          onPress={() => {
-            this.setModalVisible(true);
-          }}
-        >
-          <Icon 
-            name="pluscircleo"
-            size={50}
-            color={Colors.bloodOrange}
-          />
-        </TouchableOpacity>
+        <Calendar onDateSelected={(value) => this.onDateChange(value)} />
+        <RoundedIcon onPress={() => this.setModalVisible(true)} />
         <AddTaskModal
           visible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
@@ -64,4 +44,25 @@ export default class HomeScreen extends Component {
       </View>
     );
   }
-}
+} 
+
+export default compose(
+  firebaseConnect((props) => {
+    const uid = getFirebase().auth().currentUser.uid;
+    const selectedDate = props.navigation.getParam('selectedDate', '')
+    return [
+      { path: `Users/${uid}/${selectedDate}` }
+    ]
+  }),
+  connect(
+    (state) => {
+      const usersTask = state.firebase.data.Users && Object.entries(state.firebase.data.Users)
+      const taskList = usersTask && Object.entries(usersTask[0][1])
+      const tasks = taskList && Object.entries(taskList[0][1])
+
+      return {
+        tasks
+      }
+    } 
+  )
+)(HomeScreen);

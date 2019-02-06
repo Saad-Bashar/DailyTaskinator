@@ -9,6 +9,7 @@ import { Images, Colors, Fonts } from '../Themes'
 // Styles
 import styles from './Styles/LaunchScreenStyles'
 
+
 class LaunchScreen extends Component {
   state = {
     animation: new Animated.Value(1),
@@ -16,7 +17,7 @@ class LaunchScreen extends Component {
   }
 
   componentDidMount() {
-    Animated.sequence([
+    Animated.stagger(200, [
       Animated.timing(this.state.animation, {
         toValue: 3,
         duration: 600
@@ -57,19 +58,18 @@ class LaunchScreen extends Component {
     };
 
     return (
-      <View style={[{ flex: 1 }, styles.centered,]}>
-        <Animated.View style={[animatedStyles]}>
+      <View style={[{ flex: 1 }, styles.centered ]}>
+        <Animated.View style={[ animatedStyles ]}>
           <Image source={Images.logoNew} style={styles.logo} />
         </Animated.View>
         <Animated.View 
-          style={[{textAlign: 'center', paddingTop: 60 }, {opacity: opacityInterpolate}]}
+          style={[{ textAlign: 'center', paddingTop: 70 }, { opacity: opacityInterpolate }]}
         >
-          <Text style={{ color: Colors.fire, fontSize: Fonts.size.h6 }}>
+          <Text style={{ color: Colors.fire, fontSize: Fonts.size.h6, fontFamily: Fonts.type.bold }}>
             Daily Taskinator
           </Text>
         </Animated.View>
-      </View>
-      
+      </View> 
     )
   }
 }

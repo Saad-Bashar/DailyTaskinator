@@ -4,17 +4,19 @@ import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Colors, Fonts } from '../Themes';
-import Input from './Input';
+import Input from '../Components/Input';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { firebaseConnect } from 'react-redux-firebase';
+import { compose } from 'redux'
+import { connect } from 'react-redux';
 
 const validationSchema = yup.object().shape({
   taskName: yup.string().label('Task Name').required(),
   category: yup.string().label('Category').required()
 });
 
-
-export default class AddTaskModal extends Component {
+class AddTaskModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,8 +104,13 @@ export default class AddTaskModal extends Component {
             </View>
             <Formik
               initialValues={{ category: '', taskName: '', taskContent: '', startTime: '', endTime: '' }}
-              onSubmit={(values, actions) => {
-                console.log('Form Values ', values)
+              onSubmit={(values) => {
+                console.log('Form Values ', values);
+                const { firebase, auth } = this.props;
+                const uid = auth.uid;
+                firebase.database().ref(`/Users/${uid}/${this.props.selectedDate}`).push(values, function(error) {
+                  console.log(error)
+                });
               }}
               validationSchema={validationSchema}
             >
@@ -170,3 +177,14 @@ export default class AddTaskModal extends Component {
     );
   }
 }
+
+export default compose(
+  firebaseConnect(() => {}),
+  connect(
+    (state) => {
+      return {
+        auth: state.firebase.auth
+      }
+    } 
+  )
+)(AddTaskModal);
