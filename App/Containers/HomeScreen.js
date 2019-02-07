@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, LayoutAnimation, Text } from 'react-native';
+import { View, LayoutAnimation, Text, FlatList } from 'react-native';
 import AddTaskModal from './AddTaskModal';
 import moment from 'moment'
 import { firebaseConnect, getFirebase } from 'react-redux-firebase';
@@ -7,6 +7,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux';
 import Calendar from '../Components/Calendar';
 import RoundedIcon from '../Components/RoundedIcon';
+import SelectedDateActions from '../Redux/SelectedDateRedux'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class HomeScreen extends Component {
     };
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     props.navigation.setParams({ selectedDate: moment().format('YYYY-MM-DD') })
+    props.setSelectedDate(moment().format('YYYY-MM-DD'))
   }
 
   setModalVisible = (visible) => {
@@ -29,13 +31,23 @@ class HomeScreen extends Component {
       selectedDate
     });
     this.props.navigation.setParams({ selectedDate });
+    this.props.setSelectedDate(selectedDate)
   }
 
   render() {
     return ( 
       <View style={{ flex: 1 }}>
         <Calendar onDateSelected={(value) => this.onDateChange(value)} />
-        <RoundedIcon onPress={() => this.setModalVisible(true)} />
+        <RoundedIcon onPress={() => this.setModalVisible(true)} />       
+        {/* <FlatList
+          data={this.props.tasks}
+          renderItem={({item}) => {
+            console.log('Item ', item)
+            return (
+              <Text>{item[1].taskName}</Text>
+            )
+          }}
+        /> */}
         <AddTaskModal
           visible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
@@ -45,6 +57,13 @@ class HomeScreen extends Component {
     );
   }
 } 
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setSelectedDate: data => dispatch(SelectedDateActions.setSelectedDate(data))
+  }
+}
+
 
 export default compose(
   firebaseConnect((props) => {
@@ -56,13 +75,15 @@ export default compose(
   }),
   connect(
     (state) => {
-      const usersTask = state.firebase.data.Users && Object.entries(state.firebase.data.Users)
-      const taskList = usersTask && Object.entries(usersTask[0][1])
-      const tasks = taskList && Object.entries(taskList[0][1])
+      const uid = getFirebase().auth().currentUser.uid;
+      const selectedDate = state.selectedDate.selectedDate;
+      const dayTask = state.firebase.data.Users && state.firebase.data.Users[uid][selectedDate]
+
 
       return {
-        tasks
+        tasks: dayTask && Object.entries(dayTask)
       }
-    } 
+    },
+    mapDispatchToProps
   )
 )(HomeScreen);
