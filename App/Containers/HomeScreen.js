@@ -74,14 +74,14 @@ class HomeScreen extends Component {
           <PersonalIcon 
             name="ios-man"
             size={22}
-            color={'#B1604A'}
+            color={'#FF8C00'}
             style={{ paddingRight: 5 }}
           />
         )
       case 'Family': 
         return (
           <MatIcon 
-            name="account-group"
+            name="human-male-female"
             size={22}
             color={'#B17667'}
             style={{ paddingRight: 5 }}
@@ -110,11 +110,11 @@ class HomeScreen extends Component {
           renderScene = {({ route }) => {
             switch (route.key) {
               case 'first':
-                return <WorkTab />
-              case 'second':
                 return <IslamTab />
-              case 'third':
+              case 'second':
                 return <FamilyTab />
+              case 'third':
+                return <WorkTab />
               case 'fourth':
                 return <PersonalTab />
               default:
