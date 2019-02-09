@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, LayoutAnimation, Text, Dimensions } from 'react-native';
+import { View, LayoutAnimation } from 'react-native';
 import AddTaskModal from './AddTaskModal';
 import moment from 'moment'
 import { firebaseConnect, getFirebase } from 'react-redux-firebase';
@@ -8,18 +8,7 @@ import { connect } from 'react-redux';
 import Calendar from '../Components/Calendar';
 import RoundedIcon from '../Components/RoundedIcon';
 import SelectedDateActions from '../Redux/SelectedDateRedux'
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import WorkTab from './WorkTab';
-import IslamTab from './IslamTab';
-import { Colors } from '../Themes'
-import FamilyTab from './FamilyTab';
-import PersonalTab from './PersonalTab';
-import Icon from 'react-native-vector-icons/AntDesign'
-import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import WorkIcon from 'react-native-vector-icons/MaterialIcons'
-import PersonalIcon from 'react-native-vector-icons/Ionicons'
-
-
+import TaskScreen from './TaskScreens';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -49,95 +38,15 @@ class HomeScreen extends Component {
     this.props.setSelectedDate(selectedDate)
   }
 
-  getIcons = (title) => {
-    switch(title) {
-      case 'Islam':
-        return (
-          <MatIcon 
-            name="islam"
-            size={22}
-            color={'#EB8F0D'}
-            style={{ paddingRight: 5 }}
-          />
-        )
-      case 'Work': 
-        return (
-          <WorkIcon 
-            name="work"
-            size={22}
-            color={'#F5C820'}
-            style={{ paddingRight: 5 }}
-          />
-        )
-      case 'Personal': 
-        return (
-          <PersonalIcon 
-            name="ios-man"
-            size={22}
-            color={'#FF8C00'}
-            style={{ paddingRight: 5 }}
-          />
-        )
-      case 'Family': 
-        return (
-          <MatIcon 
-            name="human-male-female"
-            size={22}
-            color={'#B17667'}
-            style={{ paddingRight: 5 }}
-          />
-        )
-    }
-  }
-
-  _renderLabel = scene => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        {this.getIcons(scene.route.title)}
-        {/* <Text style={{ color: Colors.bloodOrange, fontWeight: 'bold'}}>{ scene.route.title }</Text> */}
-      </View>
-    );
-  }
-
   render() {
     const selectedDate = this.props.navigation.getParam('selectedDate', '');
     const { modalVisible } = this.state;
     return ( 
       <View style={{ flex: 1 }}>
         <Calendar onDateSelected={(value) => this.onDateChange(value)} />
-        <TabView
-          navigationState={this.state}
-          renderScene = {({ route }) => {
-            switch (route.key) {
-              case 'first':
-                return <IslamTab />
-              case 'second':
-                return <FamilyTab />
-              case 'third':
-                return <WorkTab />
-              case 'fourth':
-                return <PersonalTab />
-              default:
-                return null;
-            }
-          }}
-          renderTabBar={props =>
-            <TabBar
-              {...props}
-              style={{ backgroundColor: '#fff' }}
-              indicatorStyle={{ backgroundColor: Colors.bloodOrange, paddingBottom: 5 }}
-              renderLabel={ this._renderLabel }
-            />
-          }
-          onIndexChange={index => this.setState({ index })}
-          initialLayout={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
-        />
+        <TaskScreen navigation={this.props.navigation} tasks={this.props.tasks && this.props.tasks} />
         <RoundedIcon onPress={() => this.setModalVisible(true)} />
-        <AddTaskModal
-          visible={modalVisible}
-          setModalVisible={this.setModalVisible}
-          selectedDate={selectedDate}
-        />
+        <AddTaskModal visible={modalVisible} setModalVisible={this.setModalVisible} selectedDate={selectedDate} />
       </View>
     );
   }
@@ -158,7 +67,6 @@ const mapStateToProps = (state) => {
     tasks: dayTask && Object.entries(dayTask)
   }
 }
-
 
 export default compose(
   firebaseConnect((props) => {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { Fonts, Colors } from '../../Themes';
 
 export default class IslamTab extends Component {
   constructor(props) {
@@ -11,7 +12,9 @@ export default class IslamTab extends Component {
   render() {
     return (
       <View>
-        <Text> Islam </Text>
+        <Text style={{ paddingLeft: 20, fontSize: Fonts.size.h2, color: Colors.cloud, fontFamily: Fonts.type.bold }}>
+          Islam
+        </Text>
       </View>
     );
   }
