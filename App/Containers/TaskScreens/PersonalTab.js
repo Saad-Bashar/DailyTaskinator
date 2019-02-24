@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { Fonts, Colors } from '../../Themes';
+import { View, FlatList } from 'react-native';
+import { TabHeader } from '../../Components/TabHeader';
+import ListItem from '../../Components/ListItem';
 
 export default class PersonalTab extends Component {
   constructor(props) {
@@ -9,12 +10,27 @@ export default class PersonalTab extends Component {
     };
   }
 
+  renderItem = ({ item }) => {
+    return (
+      <ListItem
+        item={item}
+      />
+    );
+  }
+
+  keyExtractor = (item) => item[0];
+
   render() {
+    const { tasks } = this.props;
+
     return (
       <View>
-        <Text style={{ paddingLeft: 20, fontSize: Fonts.size.h2, color: Colors.cloud, fontFamily: Fonts.type.bold }}>
-          Personal
-        </Text>
+        <TabHeader header="Personal" />
+        <FlatList
+          data={tasks && tasks}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+        />
       </View>
     );
   }

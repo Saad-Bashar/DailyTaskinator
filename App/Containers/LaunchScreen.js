@@ -20,11 +20,11 @@ class LaunchScreen extends Component {
     Animated.stagger(200, [
       Animated.timing(this.state.animation, {
         toValue: 3,
-        duration: 600
+        duration: 2000
       }),
       Animated.timing(this.state.opacityAnimation, {
         toValue: 1,
-        duration: 600
+        duration: 2000
       }),
     ]).start(() => this.setAuth());
   }
@@ -34,13 +34,15 @@ class LaunchScreen extends Component {
     const { navigation } = this.props;
     auth.onAuthStateChanged(function(user) {
       if (user) {
+        console.log('User is there!')
         navigation.navigate('HomeScreen');
       } else {
+        console.log('New User Registering...')
         auth.signInAnonymously()
         .then(() => navigation.navigate('HomeScreen'))
         .catch(function(error) {
           console.error(error);
-        });
+        });                
       }
     });
   }

@@ -9,6 +9,7 @@ import Calendar from '../Components/Calendar';
 import RoundedIcon from '../Components/RoundedIcon';
 import SelectedDateActions from '../Redux/SelectedDateRedux'
 import TaskScreen from './TaskScreens';
+import firebase from 'firebase'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -26,6 +27,14 @@ class HomeScreen extends Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     props.navigation.setParams({ selectedDate: moment().format('YYYY-MM-DD') })
     props.setSelectedDate(moment().format('YYYY-MM-DD'))
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('lla ', user.uid);
+      }
+    });
   }
 
   setModalVisible = (visible) => {
@@ -60,6 +69,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   const uid = getFirebase().auth().currentUser.uid;
+  console.log('UID ', uid);
   const selectedDate = state.selectedDate.selectedDate;
   const dayTask = state.firebase.data.Users && state.firebase.data.Users[uid][selectedDate]
 

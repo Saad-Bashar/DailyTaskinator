@@ -4,26 +4,54 @@ import Card from './Card';
 import { CheckBox } from 'react-native-elements'
 import { Colors, Fonts } from '../Themes';
 import Icon from 'react-native-vector-icons/Feather'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase';
+import { compose } from 'redux'
+import { connect } from 'react-redux';
+import EditTaskModal from '../Containers/EditTaskModal';
 
-export default class ListItem extends Component {
+class ListItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checked: false
+      checked: props.item[1].isComplete || false,
+      modalVisible: false
     };
   }
 
+  updateTask = () => {
+    this.setState({
+      checked: !this.state.checked
+    }, () => {
+      const { firebase, selectedDate, item } = this.props;
+      const uid = getFirebase().auth().currentUser.uid;
+      const checked = this.state.checked
+
+      firebase.database().ref(`/Users/${uid}/${selectedDate.selectedDate}/${item[0]}`).update({
+        isComplete: checked
+      })
+    });
+  }
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  }
+
   render() {
+    const { taskName, taskContent, startTime, endTime, isComplete } = this.props.item[1];
+    const { modalVisible } = this.state;
+    
     return (
       <Card>
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => this.setModalVisible(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
           <CheckBox
             checkedColor={Colors.bloodOrange}
             checked={this.state.checked}
-            onPress={() => this.setState({ checked: !this.state.checked })}
+            onPress={this.updateTask}
           />
           <View>
-            <Text style={{ fontSize: Fonts.size.medium, fontWeight: '500', fontFamily: Fonts.type.bold }}>Work</Text>
+            <Text style={{ fontSize: Fonts.size.medium, fontWeight: '500', fontFamily: Fonts.type.bold }}>
+              {taskName}
+            </Text>
             <View style={{ flexDirection: 'row', paddingVertical: 2, alignItems: 'center' }}>
               <Icon 
                 name="clock"
@@ -32,16 +60,29 @@ export default class ListItem extends Component {
                 style={{ paddingRight: 5 }}
               />
               <Text style={{ fontSize: 12 }}>
-                7:00 ~ 9:00 am
+                {startTime} ~ {endTime}
               </Text>
             </View>
 
             <Text style={{ fontSize: 11, color: '#9C9C9C' }}>
-              Finish Book
+              {taskContent}
             </Text>
           </View>
         </TouchableOpacity>
+        <EditTaskModal selectedDate={this.props.selectedDate.selectedDate} item={this.props.item} visible={modalVisible} setModalVisible={this.setModalVisible} />
       </Card>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    selectedDate: state.selectedDate
+  }
+}
+
+export default compose(
+  firebaseConnect((props) => {
+    
+  }),
+connect(mapStateToProps, null))(ListItem);

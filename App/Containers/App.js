@@ -1,9 +1,12 @@
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
+import { View } from 'react-native'
 import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+import FlashMessage from "react-native-flash-message";
+
 
 console.disableYellowBox = true;
 
@@ -23,7 +26,10 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <View style={{ flex: 1 }}>
+          <RootContainer />
+          <FlashMessage position="top" />
+        </View>
       </Provider>
     )
   }

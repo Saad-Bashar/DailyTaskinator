@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import ListItem from '../../Components/ListItem';
-import { Fonts, Colors } from '../../Themes';
+import { TabHeader } from '../../Components/TabHeader';
 
 export default class FamilyTab extends Component {
   constructor(props) {
@@ -18,15 +18,17 @@ export default class FamilyTab extends Component {
     );
   }
 
+  keyExtractor = (item) => item[0];
+
   render() {
+    const { tasks } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <Text style={{ paddingLeft: 20, fontSize: Fonts.size.h2, color: Colors.cloud, fontFamily: Fonts.type.bold }}>
-          Family
-        </Text>
+        <TabHeader header="Family" />
         <FlatList
-          data={[{key: 'a'}, {key: 'b'}, {key: 'c'}]}
+          data={tasks && tasks}
           renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
         />
       </View>
     );

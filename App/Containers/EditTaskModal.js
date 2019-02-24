@@ -10,14 +10,15 @@ import * as yup from 'yup';
 import { firebaseConnect, getFirebase } from 'react-redux-firebase';
 import { compose } from 'redux'
 import { connect } from 'react-redux';
-import { showMessage } from 'react-native-flash-message';
+import { showMessage, hideMessage } from "react-native-flash-message";
+
 
 const validationSchema = yup.object().shape({
   taskName: yup.string().label('Task Name').required(),
   category: yup.string().label('Category').required()
 });
 
-class AddTaskModal extends Component {
+class EditTaskModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,6 +67,17 @@ class AddTaskModal extends Component {
     });
   }
 
+  delete = () => {
+    const { firebase, selectedDate, setModalVisible, visible, item } = this.props;
+    const uid = getFirebase().auth().currentUser.uid;
+    firebase.database().ref(`/Users/${uid}/${selectedDate}/${item[0]}`).remove();
+    setModalVisible(!visible);
+    showMessage({
+      message: "Deleted Successfully!",
+      type: "danger",
+    });
+  }
+
   render() {
     let data = [{
         value: 'Islam',
@@ -76,6 +88,9 @@ class AddTaskModal extends Component {
     }, {
         value: 'Personal'
     }];
+
+    const { taskName, taskContent, startTime, endTime, category } = this.props.item[1];
+    const { selectedDate, item } = this.props;
 
     return (
       <Modal
@@ -89,7 +104,7 @@ class AddTaskModal extends Component {
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>
-                Create Task
+                Edit Task
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -104,19 +119,23 @@ class AddTaskModal extends Component {
               </TouchableOpacity>
             </View>
             <Formik
-              initialValues={{ category: '', taskName: '', taskContent: '', startTime: '', endTime: '', isComplete: false }}
+              initialValues={{ category: category, taskName: taskName, taskContent: taskContent, startTime: startTime, endTime: endTime }}
               onSubmit={(values) => {
                 console.log('Form Values ', values);
                 const { firebase } = this.props;
                 const uid = getFirebase().auth().currentUser.uid;
-                firebase.database().ref(`/Users/${uid}/${this.props.selectedDate}`).push(values, function(error) {
-                  console.log(error)
+                firebase.database().ref(`/Users/${uid}/${selectedDate}/${item[0]}`).update({
+                  taskName: values.taskName,
+                  category: values.category,
+                  taskContent: values.taskContent,
+                  startTime: values.startTime,
+                  endTime: values.endTime
                 });
                 this.props.setModalVisible(!this.props.visible)
                 showMessage({
-                  message: 'Task Added Successfully',
-                  type: 'success'
-                })
+                  message: "Updated Successfully!",
+                  type: "success",
+                });
               }}
               validationSchema={validationSchema}
             >
@@ -128,6 +147,7 @@ class AddTaskModal extends Component {
                     data={data}
                     baseColor={ Colors.bloodOrange }
                     onChangeText={(value) => {formikProps.setFieldValue('category', value);}}
+                    value={formikProps.values['category']}
                   />
                   <Text style={{ color: 'red' }}>
                     {formikProps.touched['category'] && formikProps.errors['category']}
@@ -136,6 +156,7 @@ class AddTaskModal extends Component {
                     label={'Task Name *'}
                     onChangeText={formikProps.handleChange('taskName')}
                     onBlur={formikProps.handleBlur('taskName')}
+                    value={formikProps.values['taskName']}
                   />
                   <Text style={{ color: 'red' }}>
                     {formikProps.touched['taskName'] && formikProps.errors['taskName']}
@@ -144,6 +165,7 @@ class AddTaskModal extends Component {
                     label={'Task Content'}
                     multiline={true}
                     onChangeText={formikProps.handleChange('taskContent')}
+                    value={formikProps.values['taskContent']}
                   />
                   <Input
                     label={'Start Time'}
@@ -155,12 +177,21 @@ class AddTaskModal extends Component {
                     onFocus={() => this._showEndDateTimePicker(formikProps)}
                     value={formikProps.values['endTime']}
                   />
-                  <TouchableOpacity
-                    style={{ width: 150, borderRadius: 5, backgroundColor: Colors.bloodOrange, padding: 10, alignSelf: 'center', marginTop: 60 }}
-                    onPress={formikProps.handleSubmit}
-                  >
-                    <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Save</Text>
-                  </TouchableOpacity>
+                  <View style={{ flexDirection: 'row', marginTop: 60, justifyContent: 'center' }}>
+                    <TouchableOpacity
+                      style={{ width: 150, borderRadius: 5, backgroundColor: Colors.bloodOrange, padding: 10 }}
+                      onPress={formikProps.handleSubmit}
+                    >
+                      <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ width: 150, borderRadius: 5, backgroundColor: Colors.fire, padding: 10, marginLeft: 10 }}
+                      onPress={this.delete}
+                    >
+                      <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Delete</Text>
+                    </TouchableOpacity>
+                  </View>
+                  
                 </React.Fragment>  
               )}
 
@@ -193,4 +224,4 @@ export default compose(
       }
     } 
   )
-)(AddTaskModal);
+)(EditTaskModal);

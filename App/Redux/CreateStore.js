@@ -16,8 +16,8 @@ export default (rootReducer, rootSaga) => {
 
   /* ------------- Firebase Configuration ------------- */
   const reduxFirebaseConfig = {
-    userProfile: 'users',
-    attachAuthIsReady: true,
+    // userProfile: 'users',
+    // attachAuthIsReady: true,
     enableRedirectHandling: false
   };
   
