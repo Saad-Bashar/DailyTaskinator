@@ -24,7 +24,7 @@ export default class FamilyTab extends Component {
     const { tasks } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <TabHeader header="Family" />
+        {/* <TabHeader header="Family" /> */}
         <FlatList
           data={tasks && tasks}
           renderItem={this.renderItem}

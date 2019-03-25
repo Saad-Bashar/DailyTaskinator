@@ -25,7 +25,7 @@ export default class WorkTab extends Component {
 
     return (
       <View>
-        <TabHeader header="Work" />
+        {/* <TabHeader header="Work" /> */}
         <FlatList
           data={tasks && tasks}
           renderItem={this.renderItem}

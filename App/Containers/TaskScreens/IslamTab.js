@@ -25,7 +25,7 @@ export default class IslamTab extends Component {
 
     return (
       <View>
-        <TabHeader header="Islam" />
+        {/* <TabHeader header="Islam" /> */}
         <FlatList
           data={tasks && tasks}
           renderItem={this.renderItem}

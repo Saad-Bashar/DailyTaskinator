@@ -25,7 +25,7 @@ export default class PersonalTab extends Component {
 
     return (
       <View>
-        <TabHeader header="Personal" />
+        {/* <TabHeader header="Personal" /> */}
         <FlatList
           data={tasks && tasks}
           renderItem={this.renderItem}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, Text } from 'react-native';
 import { TabView, TabBar } from 'react-native-tab-view';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import WorkIcon from 'react-native-vector-icons/MaterialIcons'
@@ -67,8 +67,9 @@ export default class TaskScreen extends Component {
 
   _renderLabel = scene => {
     return (
-      <View>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {this.getIcons(scene.route.title)}
+        <Text style={{ color: Colors.bloodOrange }}>{scene.route.title}</Text>
       </View>
     );
   }
@@ -109,6 +110,7 @@ export default class TaskScreen extends Component {
         }
         onIndexChange={index => this.setState({ index })}
         initialLayout={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
+        tabBarPosition="bottom"
       />
     );
   }

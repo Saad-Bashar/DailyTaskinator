@@ -14,12 +14,12 @@ export default class RoundedIcon extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={{ position: 'absolute', bottom: 40, padding: 20, alignSelf: 'center' }}
+        style={{ position: 'absolute', bottom: 70, right: 10, padding: 20, alignSelf: 'center' }}
         onPress={this.props.onPress}
       >
         <Icon 
           name="pluscircleo"
-          size={45}
+          size={40}
           color={Colors.bloodOrange}
         />
       </TouchableOpacity>

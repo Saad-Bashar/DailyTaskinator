@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, LayoutAnimation } from 'react-native';
+import { View, LayoutAnimation, TouchableOpacity } from 'react-native';
 import AddTaskModal from './AddTaskModal';
 import moment from 'moment'
 import { firebaseConnect, getFirebase } from 'react-redux-firebase';
@@ -10,6 +10,9 @@ import RoundedIcon from '../Components/RoundedIcon';
 import SelectedDateActions from '../Redux/SelectedDateRedux'
 import TaskScreen from './TaskScreens';
 import firebase from 'firebase'
+import ListIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import TimelineIcon from 'react-native-vector-icons/MaterialIcons';
+import colors from '../Themes/Colors';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -17,6 +20,7 @@ class HomeScreen extends Component {
     this.state = {
       modalVisible: false,
       index: 0,
+      isTimeline: false,
       routes: [
         { key: 'first', title: 'Islam' },
         { key: 'second', title: 'Family' },
@@ -29,13 +33,6 @@ class HomeScreen extends Component {
     props.setSelectedDate(moment().format('YYYY-MM-DD'))
   }
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log('lla ', user.uid);
-      }
-    });
-  }
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
@@ -49,10 +46,23 @@ class HomeScreen extends Component {
 
   render() {
     const selectedDate = this.props.navigation.getParam('selectedDate', '');
-    const { modalVisible } = this.state;
+    const { modalVisible, isTimeline } = this.state;
     return ( 
       <View style={{ flex: 1 }}>
-        <Calendar onDateSelected={(value) => this.onDateChange(value)} />
+        <TouchableOpacity 
+          onPress={() => this.setState({ isTimeline: !this.state.isTimeline })} 
+          style={{ alignItems: 'flex-end', paddingRight: 20 }}
+        >
+          {!isTimeline ? 
+            <ListIcon name="playlist-check" size={24} color={colors.bloodOrange} />
+            :
+            <TimelineIcon name="timeline" size={24} color={colors.bloodOrange} />
+          }
+        </TouchableOpacity>
+        {isTimeline ? 
+          <View /> : 
+          <Calendar onDateSelected={(value) => this.onDateChange(value)} />
+        }
         <TaskScreen navigation={this.props.navigation} tasks={this.props.tasks && this.props.tasks} />
         <RoundedIcon onPress={() => this.setModalVisible(true)} />
         <AddTaskModal visible={modalVisible} setModalVisible={this.setModalVisible} selectedDate={selectedDate} />

@@ -20,7 +20,7 @@ class LaunchScreen extends Component {
     Animated.stagger(200, [
       Animated.timing(this.state.animation, {
         toValue: 3,
-        duration: 2000
+        duration: 800
       }),
       Animated.timing(this.state.opacityAnimation, {
         toValue: 1,
@@ -38,6 +38,7 @@ class LaunchScreen extends Component {
         navigation.navigate('HomeScreen');
       } else {
         console.log('New User Registering...')
+        // TODO: Navigate user to onboarding screens
         auth.signInAnonymously()
         .then(() => navigation.navigate('HomeScreen'))
         .catch(function(error) {
