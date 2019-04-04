@@ -13,6 +13,7 @@ import firebase from 'firebase'
 import ListIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import TimelineIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../Themes/Colors';
+import TimelineScreen from './TimelineScreen';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -54,16 +55,17 @@ class HomeScreen extends Component {
           style={{ alignItems: 'flex-end', paddingRight: 20 }}
         >
           {!isTimeline ? 
-            <ListIcon name="playlist-check" size={24} color={colors.bloodOrange} />
-            :
             <TimelineIcon name="timeline" size={24} color={colors.bloodOrange} />
+            :
+            <ListIcon name="playlist-check" size={24} color={colors.bloodOrange} />
           }
         </TouchableOpacity>
+        <Calendar onDateSelected={(value) => this.onDateChange(value)} />
         {isTimeline ? 
-          <View /> : 
-          <Calendar onDateSelected={(value) => this.onDateChange(value)} />
+          <TimelineScreen navigation={this.props.navigation} tasks={this.props.tasks && this.props.tasks} /> 
+          : 
+          <TaskScreen navigation={this.props.navigation} tasks={this.props.tasks && this.props.tasks} /> 
         }
-        <TaskScreen navigation={this.props.navigation} tasks={this.props.tasks && this.props.tasks} />
         <RoundedIcon onPress={() => this.setModalVisible(true)} />
         <AddTaskModal visible={modalVisible} setModalVisible={this.setModalVisible} selectedDate={selectedDate} />
       </View>
@@ -79,7 +81,6 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   const uid = getFirebase().auth().currentUser.uid;
-  console.log('UID ', uid);
   const selectedDate = state.selectedDate.selectedDate;
   const dayTask = state.firebase.data.Users && state.firebase.data.Users[uid][selectedDate]
 
