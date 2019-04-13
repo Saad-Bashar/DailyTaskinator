@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, LayoutAnimation, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, LayoutAnimation, TouchableOpacity } from 'react-native';
 import AddTaskModal from './AddTaskModal';
 import moment from 'moment'
 import { firebaseConnect, getFirebase } from 'react-redux-firebase';
@@ -49,7 +49,7 @@ class HomeScreen extends Component {
     const selectedDate = this.props.navigation.getParam('selectedDate', '');
     const { modalVisible, isTimeline } = this.state;
     return ( 
-      <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <TouchableOpacity 
           onPress={() => this.setState({ isTimeline: !this.state.isTimeline })} 
           style={{ alignItems: 'flex-end', paddingRight: 20 }}
@@ -68,7 +68,7 @@ class HomeScreen extends Component {
         }
         <RoundedIcon onPress={() => this.setModalVisible(true)} />
         <AddTaskModal visible={modalVisible} setModalVisible={this.setModalVisible} selectedDate={selectedDate} />
-      </View>
+      </SafeAreaView>
     );
   }
 } 

@@ -24,14 +24,13 @@ export default class IslamTab extends Component {
     const { tasks } = this.props;
 
     return (
-      <View>
-        {/* <TabHeader header="Islam" /> */}
+      
         <FlatList
           data={tasks && tasks}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
         />
-      </View>
+
     );
   }
 }

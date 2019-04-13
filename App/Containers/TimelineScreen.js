@@ -1,13 +1,11 @@
-import React, { Component } from 'react'
-import { ScrollView, Text } from 'react-native'
-import { connect } from 'react-redux'
+import React, { Component } from "react";
+import { ScrollView, Text } from "react-native";
+import { connect } from "react-redux";
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
 // Styles
-import styles from './Styles/TimelineScreenStyle'
-
-
+import styles from "./Styles/TimelineScreenStyle";
 
 class TimelineScreen extends Component {
   // constructor (props) {
@@ -15,41 +13,39 @@ class TimelineScreen extends Component {
   //   this.state = {}
   // }
 
-  getFilteredArray = (tasks) => {
-    console.log('filter ', tasks)
-    const filteredTask = tasks.sort(function(a,b){
-      return a[1].startTime.split(':').join('') - b[1].startTime.split(':').join('');
-    })
-
+  getFilteredArray = tasks => {
+    const filteredTask = tasks && tasks.sort(function (a, b) {
+      return new Date('1970/01/01 ' + a[1].startTime) - new Date('1970/01/01 ' + b[1].startTime);
+    });
     return filteredTask;
-  }
+  };
 
-  render () {
-    const {tasks} = this.props;
+  render() {
+    const { tasks } = this.props;
 
-    const filteredTasks = this.getFilteredArray(tasks && tasks) 
-    console.log('filteredTask ', filteredTasks)
-    
+    const filteredTasks = this.getFilteredArray(tasks && tasks);
+    console.log("filteredTask ", filteredTasks);
+
     return (
       <ScrollView style={styles.container}>
         <Text>TimelineScreen Container</Text>
       </ScrollView>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
-}
+const mapStateToProps = state => {
+  return {};
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
+const mapDispatchToProps = dispatch => {
+  return {};
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimelineScreen)
-
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimelineScreen);
 
 // var movies = [
 //   {title: 'The Godfather', rating: 9.2, release: '11:02'},

@@ -11,6 +11,8 @@ import { firebaseConnect, getFirebase } from 'react-redux-firebase';
 import { compose } from 'redux'
 import { connect } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
+import Timeline from 'react-native-timeline-listview'
+
 
 const validationSchema = yup.object().shape({
   taskName: yup.string().label('Task Name').required(),
@@ -35,7 +37,10 @@ class AddTaskModal extends Component {
 
   _handleStartDatePicked = (date) => {
     let cusdate = date;
-    let startTime = cusdate.getHours() + ":" + cusdate.getMinutes();
+    const hours = date.getHours()
+    const mins = ('0' + cusdate.getMinutes()).slice(-2);
+
+    let startTime = hours + ":" + mins;
     
     this.state.formikProps.setFieldValue('startTime', startTime);
     this._hideStartDateTimePicker();
