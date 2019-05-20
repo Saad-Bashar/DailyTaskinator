@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { Colors } from '../Themes'
+import CardStyle from './Styles/CardStyle';
 
 
 export default class RoundedIcon extends Component {
@@ -14,13 +15,25 @@ export default class RoundedIcon extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={{ position: 'absolute', bottom: 70, right: 10, padding: 20, alignSelf: 'center' }}
+        style={{
+          ...CardStyle.containerStyle,
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          borderRadius: 25,
+          alignItems: 'center',
+          justifyContent: 'center',
+          right: 30,
+          bottom: 80, 
+          backgroundColor: Colors.bloodOrange,
+          
+        }}
         onPress={this.props.onPress}
       >
         <Icon 
-          name="pluscircleo"
-          size={40}
-          color={Colors.bloodOrange}
+          name="plus"
+          size={24}
+          color={Colors.snow}
         />
       </TouchableOpacity>
     );

@@ -29,6 +29,7 @@ export default class IslamTab extends Component {
           data={tasks && tasks}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
+          contentContainerStyle={{padding: 20}}
         />
 
     );

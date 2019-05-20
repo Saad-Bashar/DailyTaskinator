@@ -6,11 +6,11 @@ export default StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 2,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 6.68,
-
-    elevation: 10,
+    shadowOpacity: 0.02,
+    shadowRadius: 2,
+    borderRadius: 8,
+    elevation: 5,
   }
 });

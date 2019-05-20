@@ -20,11 +20,11 @@ class LaunchScreen extends Component {
     Animated.stagger(200, [
       Animated.timing(this.state.animation, {
         toValue: 3,
-        duration: 800
+        duration: 600
       }),
       Animated.timing(this.state.opacityAnimation, {
         toValue: 1,
-        duration: 2000
+        duration: 600
       }),
     ]).start(() => this.setAuth());
   }

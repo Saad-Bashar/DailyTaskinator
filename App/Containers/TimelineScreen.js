@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ScrollView, Text } from "react-native";
 import { connect } from "react-redux";
-import Timeline from 'react-native-timeline-listview'
+import Timeline from '../Lib/react-native-timeline-listview'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -16,20 +16,23 @@ class TimelineScreen extends Component {
   //   this.state = {}
   // }
 
-  getIcon = (cat) => {
+
+  getColor = (cat) => {
     switch (cat) {
       case "Work":
-        return require('../Images/portfolio.png')
+        return '#21C8B7'
       case "Islam":
-        return require('../Images/quran.png')
+        return '#024449'
       case "Family":
-        return require('../Images/house.png')
+        return '#FFCD4E'
       case "Personal":
-        return require('../Images/statistics.png')
+        return '#FF8762'
       default:
         return;
     }
   }
+
+  
 
   getFilteredArray = tasks => {
     const filteredTask = tasks && tasks.sort(function (a, b) {
@@ -44,7 +47,10 @@ class TimelineScreen extends Component {
           time: item[1].startTime,
           title: item[1].taskName,
           description: item[1].taskContent,
-          icon: this.getIcon(item[1].category)
+          // icon: this.getIcon(item[1].category)
+          circleColor: this.getColor(item[1].category),
+          lineColor: this.getColor(item[1].category),
+          category: item[1].category
         })
       )
     })
@@ -58,23 +64,25 @@ class TimelineScreen extends Component {
     const { tasks } = this.props;
 
     const filteredTasks = this.getFilteredArray(tasks && tasks);
-    console.log("filteredTask ", filteredTasks);
+    console.log("filteredTask ", filteredTasks && filteredTasks[0].lineColor);
 
     return (
       <ScrollView style={styles.container}>
         <Timeline
           data={filteredTasks}
           circleSize={20}
-          circleColor='rgba(0,0,0,0)'
           innerCircle={'icon'}
           lineColor={Colors.bloodOrange}
-          timeContainerStyle={{minWidth:52, marginTop: -5, }}
-          timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', padding:5, borderRadius:13}}
+          timeContainerStyle={{textAlign: 'center', width: 60, marginTop: -5, backgroundColor: '#FF8762', borderTopRightRadius: 10, borderBottomLeftRadius: 10 }}
+          timeStyle={{textAlign: 'center',  color:'white', padding:5,  }}
           descriptionStyle={{color:'gray'}}
           options={{
-            style:{paddingTop:5 }
+            style:{ paddingTop:5, }
           }}
           separator={true}
+          innerCircle={'dot'}
+          detailContainerStyle={{ marginTop: -10 }}
+          onEventPress={() => console.log('Pressed')}
         />
       </ScrollView>
     );

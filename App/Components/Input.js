@@ -18,7 +18,7 @@ export default class Input extends Component {
         baseColor={Colors.bloodOrange}
         tintColor={Colors.bloodOrange}
         placeholderTextColor={Colors.bloodOrange}
-        inputContainerStyle={{ borderBottomColor: Colors.bloodOrange }}
+        inputContainerStyle={{ borderBottomWidth: 1, borderBottomColor: Colors.bloodOrange }}
         onChangeText={onChangeText}
         multiline={multiline}
         onFocus={onFocus}

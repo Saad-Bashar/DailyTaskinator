@@ -3,7 +3,7 @@ import { View, Text, Modal, TouchableOpacity, Keyboard } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Colors, Fonts } from '../Themes';
+import { Colors, Fonts, Metrics } from '../Themes';
 import Input from '../Components/Input';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -100,7 +100,7 @@ class EditTaskModal extends Component {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
-        <View style={{ marginTop: 40, paddingHorizontal: 25 }}>
+        <View style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>

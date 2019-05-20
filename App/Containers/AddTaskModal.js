@@ -3,7 +3,7 @@ import { View, Text, Modal, TouchableOpacity, Keyboard } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Colors, Fonts } from '../Themes';
+import { Colors, Fonts, Metrics } from '../Themes';
 import Input from '../Components/Input';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -12,6 +12,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
 import Timeline from 'react-native-timeline-listview'
+
 
 
 const validationSchema = yup.object().shape({
@@ -28,6 +29,20 @@ class AddTaskModal extends Component {
     };
   }
 
+
+  getAmPmValue = (value) => {
+    let hours = parseInt(value[0])
+    let minutes = parseInt(value[1])
+
+    let ampm = hours >= 12 ? 'pm' : 'am'
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    return hours + ':' + minutes + ' ' + ampm;
+
+  }
+
   _showStartDateTimePicker = (formikProps) => { 
     Keyboard.dismiss(); 
     this.setState({ isStartDateTimePickerVisible: true, formikProps });
@@ -41,6 +56,9 @@ class AddTaskModal extends Component {
     const mins = ('0' + cusdate.getMinutes()).slice(-2);
 
     let startTime = hours + ":" + mins;
+    startTime = this.getAmPmValue(startTime.split(':'));
+    
+    console.log('startTime ', startTime)
     
     this.state.formikProps.setFieldValue('startTime', startTime);
     this._hideStartDateTimePicker();
@@ -60,6 +78,8 @@ class AddTaskModal extends Component {
     const hours = date.getHours()
     const mins = ('0' + cusdate.getMinutes()).slice(-2);
     let endTime = hours + ":" + mins;
+
+    endTime = this.getAmPmValue(endTime.split(':'));
     
     this.state.formikProps.setFieldValue('endTime', endTime);
     this._hideEndDateTimePicker();
@@ -90,7 +110,7 @@ class AddTaskModal extends Component {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
-        <View style={{ marginTop: 40, paddingHorizontal: 25 }}>
+        <View style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>

@@ -30,6 +30,7 @@ export default class WorkTab extends Component {
           data={tasks && tasks}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
+          contentContainerStyle={{padding: 20}}
         />
       </View>
     );
