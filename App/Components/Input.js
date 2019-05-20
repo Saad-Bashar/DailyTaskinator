@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { TextField } from 'react-native-material-textfield';
-import { Colors } from '../Themes'
+import { Colors } from '../Themes';
 
 export default class Input extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
@@ -23,6 +22,7 @@ export default class Input extends Component {
         multiline={multiline}
         onFocus={onFocus}
         value={value}
+        autoCorrect={false}
       />
     );
   }
