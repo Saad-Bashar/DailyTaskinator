@@ -59,7 +59,6 @@ class TimelineScreen extends Component {
     const { tasks } = this.props;
 
     const filteredTasks = this.getFilteredArray(tasks && tasks);
-    console.log('filteredTask ', filteredTasks && filteredTasks[0].lineColor);
 
     return (
       <ScrollView style={styles.container}>
@@ -71,10 +70,13 @@ class TimelineScreen extends Component {
           timeContainerStyle={{
             textAlign: 'center',
             width: 60,
+            height: 50,
             marginTop: -5,
             backgroundColor: '#FF8762',
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
           timeStyle={{ textAlign: 'center', color: 'white', padding: 5 }}
           descriptionStyle={{ color: 'gray' }}

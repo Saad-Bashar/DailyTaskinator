@@ -51,7 +51,7 @@ class HomeScreen extends Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity
           onPress={() => this.setState({ isTimeline: !this.state.isTimeline })}
-          style={{ alignItems: 'flex-end', paddingRight: 20, marginVertical: 20 }}
+          style={{ alignItems: 'flex-end', paddingRight: 20, marginTop: 10 }}
         >
           {!isTimeline ? (
             <TimelineIcon name="timeline" size={24} color={colors.bloodOrange} />
