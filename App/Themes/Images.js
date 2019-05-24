@@ -22,7 +22,7 @@ const images = {
   backButton: require('../Images/Icons/back-button.png'),
   closeButton: require('../Images/Icons/close-button.png'),
   graphics: require('../Images/graphics.png'),
-  graphicsCenter: require('../Images/graphics-center.png'),
+  // graphicsCenter: require('../Images/graphics-center.png'),
 };
 
 export default images;

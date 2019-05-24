@@ -3,6 +3,7 @@ import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { Images, Colors } from '../Themes';
+import LottieView from 'lottie-react-native';
 
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import WorkIcon from 'react-native-vector-icons/MaterialIcons';
@@ -220,15 +221,16 @@ class OnboardingScreen extends Component {
 
   render() {
     return (
-      <AppIntroSlider
-        slides={slides}
-        renderItem={this._renderItem}
-        dotStyle={{ backgroundColor: 'rgba(242, 145, 0, 0.3)' }}
-        activeDotStyle={{ backgroundColor: 'rgba(242, 145, 0, 1)' }}
-        onDone={() => this.props.navigation.navigate('HomeScreen')}
-        bottomButton
-        buttonStyle={{ backgroundColor: Colors.bloodOrange, borderRadius: 8 }}
-      />
+      // <AppIntroSlider
+      //   slides={slides}
+      //   renderItem={this._renderItem}
+      //   dotStyle={{ backgroundColor: 'rgba(242, 145, 0, 0.3)' }}
+      //   activeDotStyle={{ backgroundColor: 'rgba(242, 145, 0, 1)' }}
+      //   onDone={() => this.props.navigation.navigate('HomeScreen')}
+      //   bottomButton
+      //   buttonStyle={{ backgroundColor: Colors.bloodOrange, borderRadius: 8 }}
+      // />
+      <LottieView source={require('../Images/stopwatch.json')} autoPlay loop />
     );
   }
 }
