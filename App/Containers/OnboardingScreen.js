@@ -75,38 +75,52 @@ class OnboardingScreen extends Component {
   _renderItem = item => {
     console.log(item);
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1 }}>
         {item.index === 0 && (
-          <View style={{ position: 'absolute', alignSelf: 'flex-end', top: 0, padding: 20 }}>
-            <Image style={{ height: 60, width: 60, alignSelf: 'flex-end' }} source={Images.logo} />
-            <View>
-              <Text
-                style={{
-                  fontSize: 22,
-                  color: Colors.bloodOrange,
-                  paddingTop: 10,
-                  textAlign: 'right',
-                  fontWeight: 'bold',
-                }}
-              >
-                DAILY
-              </Text>
-              <Text
-                style={{
-                  fontSize: 22,
-                  color: Colors.bloodOrange,
-                  textAlign: 'right',
-                  fontWeight: 'bold',
-                }}
-              >
-                TASKINATOR
-              </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Image
+              style={{ height: 150, width: 150, alignSelf: 'flex-start' }}
+              resizeMode="cover"
+              source={Images.graphics}
+            />
+
+            <View style={{ padding: 20 }}>
+              <Image style={{ height: 60, width: 60, alignSelf: 'flex-end' }} source={Images.logo} />
+              <View>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    color: Colors.bloodOrange,
+                    paddingTop: 10,
+                    textAlign: 'right',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  DAILY
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    color: Colors.bloodOrange,
+                    textAlign: 'right',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  TASKINATOR
+                </Text>
+              </View>
             </View>
           </View>
         )}
+
         {item.index == 1 && (
-          <View style={{ marginBottom: 25 }}>
-            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+          <View style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
+            <Image
+              style={{ height: 150, width: 200, alignSelf: 'center' }}
+              resizeMode="cover"
+              source={Images.graphicsCenter}
+            />
+            <View style={{ flexDirection: 'row', marginBottom: 10, marginTop: 50 }}>
               <View
                 style={{
                   backgroundColor: Colors.bloodOrange,
@@ -166,7 +180,9 @@ class OnboardingScreen extends Component {
           </View>
         )}
 
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#303030' }}>{item.title}</Text>
+        <View style={{ marginTop: 50, alignSelf: 'center' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#303030' }}>{item.title}</Text>
+        </View>
 
         {/* <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#9999', paddingTop: 10, width: 400 }}>{item.text}</Text> */}
 
