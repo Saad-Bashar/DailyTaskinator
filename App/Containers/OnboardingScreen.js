@@ -1,71 +1,194 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import AppIntroSlider from 'react-native-app-intro-slider';
-import { Images, Colors } from '../Themes';
+import { Images, Colors, Fonts } from '../Themes';
 import LottieView from 'lottie-react-native';
-
-import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import WorkIcon from 'react-native-vector-icons/MaterialIcons';
-import PersonalIcon from 'react-native-vector-icons/Ionicons';
+import Swiper from 'react-native-swiper';
+import Emoji from 'react-native-emoji';
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
 // Styles
-// import styles from './Styles/OnboardingScreenStyle';
+import styles from './Styles/OnboardingScreenStyle';
 
-// const styles = StyleSheet.create({
-//   mainContent: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'space-around',
-//   },
-//   image: {
-//     width: 320,
-//     height: 320,
-//   },
-//   text: {
-//     color: '#303030',
-//     backgroundColor: 'transparent',
-//     textAlign: 'center',
-//     paddingHorizontal: 16,
-//   },
-//   title: {
-//     fontSize: 22,
-//     color: 'white',
-//     backgroundColor: 'transparent',
-//     textAlign: 'center',
-//     marginBottom: 16,
-//   },
-// });
+const Screen1 = ({ props }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        position: 'absolute',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 120,
+      }}
+    >
+      <Image style={{ width: 150, height: 120 }} source={Images.graphics} />
+      <View style={{ margin: 20 }}>
+        <Image style={{ height: 60, width: 60, alignSelf: 'flex-end' }} source={Images.logo} />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: Colors.bloodOrange,
+            textAlign: 'right',
+            lineHeight: 21,
+            paddingTop: 4,
+          }}
+        >
+          DAILY
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: Colors.bloodOrange,
+            textAlign: 'right',
+            lineHeight: 21,
+            paddingTop: 4,
+          }}
+        >
+          TASKINATOR
+        </Text>
+      </View>
+    </View>
+    <LottieView style={{ height: 200, width: 200 }} source={require('../Images/stopwatch.json')} autoPlay loop />
+    <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', width: 300 }}>
+      Waking up each day not knowing what to do?
+    </Text>
+    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+      <Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginRight: 10 }}>
+        Not to worry, swipe right
+      </Text>
+      <Emoji name="wink" style={{ fontSize: 24 }} />
+    </View>
+  </View>
+);
 
-const slides = [
-  {
-    index: 0,
-    key: 'somethun',
-    title: 'NEVER FEEL UNPRODUCTIVE',
-    // text: 'Your one sheet hack for a much more fulfilling life inshaAllah.',
-    // image: require('./assets/1.jpg'),
-    backgroundColor: '#59b2ab',
-  },
-  {
-    index: 1,
-    key: 'somethun-dos',
-    title: 'CATEGORIZE YOUR TASKS',
-    text: 'Categorize your tasks into four categories - Islam, Family, Personal, Work',
-    // image: require('./assets/2.jpg'),
-    backgroundColor: '#febe29',
-  },
-  {
-    index: 2,
-    key: 'somethun1',
-    title: 'SCHEDULE YOUR PRIORITY',
-    text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-    // image: require('./assets/3.jpg'),
-    backgroundColor: '#22bcb5',
-  },
-];
+const Screen2 = ({ props }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        position: 'absolute',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 120,
+      }}
+    >
+      <View style={{ margin: 20 }}>
+        <Image style={{ height: 60, width: 60 }} source={Images.logo} />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: Colors.bloodOrange,
+            lineHeight: 21,
+            paddingTop: 4,
+          }}
+        >
+          DAILY
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: Colors.bloodOrange,
+            lineHeight: 21,
+            paddingTop: 4,
+          }}
+        >
+          TASKINATOR
+        </Text>
+      </View>
+      <Image style={{ width: 150, height: 120 }} source={Images.graphics} />
+    </View>
+    <LottieView style={{ height: 300, width: 300 }} source={require('../Images/tasks.json')} autoPlay loop />
+    <Text style={{ fontSize: 18, textAlign: 'center', width: 300, lineHeight: 21 }}>
+      Seize your day with <Text style={{ fontWeight: 'bold', color: '#024449' }}>ISLAM</Text>,{' '}
+      <Text style={{ fontWeight: 'bold', color: '#916800' }}>FAMILY</Text>,{' '}
+      <Text style={{ fontWeight: 'bold', color: '#21C8B7' }}>WORK</Text> and{' '}
+      <Text style={{ fontWeight: 'bold', color: '#FF8762' }}>PERSONAL</Text> activities
+    </Text>
+    <View style={{ marginTop: 10, width: 300 }}>
+      <Text style={{ fontSize: 14, lineHeight: 21, textAlign: 'center' }}>
+        Each day, spend sometime to think of 3-5 important tasks for these four areas in your life
+      </Text>
+    </View>
+  </View>
+);
+
+const Screen3 = ({ navigation }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        position: 'absolute',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 120,
+      }}
+    >
+      <Image style={{ width: 150, height: 120 }} source={Images.graphics} />
+      <View style={{ margin: 20 }}>
+        <Image style={{ height: 60, width: 60, alignSelf: 'flex-end' }} source={Images.logo} />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: Colors.bloodOrange,
+            textAlign: 'right',
+            lineHeight: 21,
+            paddingTop: 4,
+          }}
+        >
+          DAILY
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: Colors.bloodOrange,
+            textAlign: 'right',
+            lineHeight: 21,
+            paddingTop: 4,
+          }}
+        >
+          TASKINATOR
+        </Text>
+      </View>
+    </View>
+    <LottieView style={{ height: 200, width: 200 }} source={require('../Images/trophy.json')} autoPlay loop />
+    <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', width: 300 }}>
+      Live a much more fulfilling life inshaaAllah
+    </Text>
+    <View style={{ marginTop: 10 }}>
+      <Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', width: 300 }}>
+        Never again will you live your day without adding value to it.
+      </Text>
+    </View>
+
+    <TouchableOpacity
+      style={{
+        borderRadius: 8,
+        backgroundColor: Colors.bloodOrange,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        alignSelf: 'center',
+        marginTop: 25,
+      }}
+      onPress={() => navigation.navigate('HomeScreen')}
+    >
+      <Text style={{ fontSize: 14, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>LETS DO IT</Text>
+    </TouchableOpacity>
+  </View>
+);
 
 class OnboardingScreen extends Component {
   // constructor (props) {
@@ -73,164 +196,13 @@ class OnboardingScreen extends Component {
   //   this.state = {}
   // }
 
-  _renderItem = item => {
-    console.log(item);
-    return (
-      <View style={{ flex: 1 }}>
-        {item.index === 0 && (
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Image
-              style={{ height: 150, width: 150, alignSelf: 'flex-start' }}
-              resizeMode="cover"
-              source={Images.graphics}
-            />
-
-            <View style={{ padding: 20 }}>
-              <Image style={{ height: 60, width: 60, alignSelf: 'flex-end' }} source={Images.logo} />
-              <View>
-                <Text
-                  style={{
-                    fontSize: 22,
-                    color: Colors.bloodOrange,
-                    paddingTop: 10,
-                    textAlign: 'right',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  DAILY
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 22,
-                    color: Colors.bloodOrange,
-                    textAlign: 'right',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  TASKINATOR
-                </Text>
-              </View>
-            </View>
-          </View>
-        )}
-
-        {item.index == 1 && (
-          <View style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
-            <Image
-              style={{ height: 150, width: 200, alignSelf: 'center' }}
-              resizeMode="cover"
-              source={Images.graphicsCenter}
-            />
-            <View style={{ flexDirection: 'row', marginBottom: 10, marginTop: 50 }}>
-              <View
-                style={{
-                  backgroundColor: Colors.bloodOrange,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 4,
-                  marginRight: 5,
-                  width: 60,
-                  paddingVertical: 5,
-                }}
-              >
-                <MatIcon name="islam" size={32} color={Colors.snow} />
-              </View>
-
-              <View
-                style={{
-                  backgroundColor: Colors.bloodOrange,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 4,
-                  width: 60,
-                  paddingVertical: 5,
-                }}
-              >
-                <MatIcon name="human-male-female" size={32} color={Colors.snow} />
-              </View>
-            </View>
-
-            <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  backgroundColor: Colors.bloodOrange,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 4,
-                  marginRight: 5,
-                  width: 60,
-                  paddingVertical: 5,
-                }}
-              >
-                <WorkIcon name="work" size={32} color={Colors.snow} style={{ paddingRight: 5 }} />
-              </View>
-
-              <View
-                style={{
-                  backgroundColor: Colors.bloodOrange,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 4,
-                  width: 60,
-                  paddingVertical: 5,
-                }}
-              >
-                <PersonalIcon name="ios-man" size={32} color={Colors.snow} />
-              </View>
-            </View>
-          </View>
-        )}
-
-        <View style={{ marginTop: 50, alignSelf: 'center' }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#303030' }}>{item.title}</Text>
-        </View>
-
-        {/* <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#9999', paddingTop: 10, width: 400 }}>{item.text}</Text> */}
-
-        {item.index === 2 && (
-          <View style={{ position: 'absolute', top: 0, alignSelf: 'flex-start', padding: 20 }}>
-            <Image style={{ height: 60, width: 60, alignSelf: 'flex-start' }} source={Images.logo} />
-            <View>
-              <Text
-                style={{
-                  fontSize: 22,
-                  color: Colors.bloodOrange,
-                  paddingTop: 10,
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                }}
-              >
-                DAILY
-              </Text>
-              <Text
-                style={{
-                  fontSize: 22,
-                  color: Colors.bloodOrange,
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                }}
-              >
-                TASKINATOR
-              </Text>
-            </View>
-          </View>
-        )}
-      </View>
-    );
-  };
-
   render() {
     return (
-      // <AppIntroSlider
-      //   slides={slides}
-      //   renderItem={this._renderItem}
-      //   dotStyle={{ backgroundColor: 'rgba(242, 145, 0, 0.3)' }}
-      //   activeDotStyle={{ backgroundColor: 'rgba(242, 145, 0, 1)' }}
-      //   onDone={() => this.props.navigation.navigate('HomeScreen')}
-      //   bottomButton
-      //   buttonStyle={{ backgroundColor: Colors.bloodOrange, borderRadius: 8 }}
-      // />
-      <LottieView source={require('../Images/stopwatch.json')} autoPlay loop />
+      <Swiper style={{ flex: 1 }} activeDotColor={Colors.bloodOrange}>
+        <Screen1 />
+        <Screen2 />
+        <Screen3 navigation={this.props.navigation} />
+      </Swiper>
     );
   }
 }
