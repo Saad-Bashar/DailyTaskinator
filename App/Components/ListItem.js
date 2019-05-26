@@ -8,6 +8,7 @@ import { firebaseConnect, getFirebase } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import EditTaskModal from '../Containers/EditTaskModal';
+import LottieView from 'lottie-react-native';
 
 class ListItem extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class ListItem extends Component {
     this.state = {
       checked: props.item[1].isComplete || false,
       modalVisible: false,
+      clap: false,
     };
   }
 
@@ -28,6 +30,15 @@ class ListItem extends Component {
         const uid = getFirebase().auth().currentUser.uid;
         const checked = this.state.checked;
 
+        if (checked) {
+          this.setState(
+            {
+              clap: true,
+            },
+            () => setTimeout(this.hideClap, 3000)
+          );
+        }
+
         firebase
           .database()
           .ref(`/Users/${uid}/${selectedDate.selectedDate}/${item[0]}`)
@@ -38,17 +49,59 @@ class ListItem extends Component {
     );
   };
 
+  hideClap = () => {
+    this.setState({
+      clap: false,
+    });
+  };
+
   setModalVisible = visible => {
     this.setState({ modalVisible: visible });
   };
 
+  getLottie = () => {
+    let lotties = [
+      <LottieView
+        style={{ marginLeft: 5, height: 50, width: 50 }}
+        source={require('../Images/clap.json')}
+        autoPlay
+        loop
+      />,
+      <LottieView
+        style={{ marginLeft: 5, height: 60, width: 60 }}
+        source={require('../Images/trophy.json')}
+        autoPlay
+        loop
+      />,
+
+      <LottieView
+        style={{ marginLeft: 5, height: 60, width: 60 }}
+        source={require('../Images/star.json')}
+        autoPlay
+        loop
+      />,
+
+      <LottieView
+        style={{ marginLeft: 5, height: 60, width: 60 }}
+        source={require('../Images/splash.json')}
+        autoPlay
+        loop
+      />,
+    ];
+
+    return lotties[Math.floor(Math.random() * lotties.length)];
+  };
+
   render() {
     const { taskName, taskContent, startTime, endTime, isComplete } = this.props.item[1];
-    const { modalVisible } = this.state;
+    const { modalVisible, clap } = this.state;
 
     return (
       <Card>
-        <TouchableOpacity onPress={() => this.setModalVisible(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          onPress={() => this.setModalVisible(true)}
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+        >
           <CheckBox checkedColor={Colors.bloodOrange} checked={this.state.checked} onPress={this.updateTask} />
 
           <View>
@@ -67,6 +120,8 @@ class ListItem extends Component {
 
             <Text style={{ paddingTop: 4, fontSize: 11, color: '#9C9C9C' }}>{taskContent}</Text>
           </View>
+
+          {clap && this.getLottie()}
         </TouchableOpacity>
 
         <EditTaskModal
