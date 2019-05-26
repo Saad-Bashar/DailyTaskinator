@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { Images, Colors, Fonts } from '../Themes';
 import LottieView from 'lottie-react-native';
@@ -195,6 +195,19 @@ class OnboardingScreen extends Component {
   //   super(props)
   //   this.state = {}
   // }
+
+  componentDidMount() {
+    this._storeData();
+  }
+
+  _storeData = async () => {
+    try {
+      await AsyncStorage.setItem('onboarding', 'true');
+    } catch (error) {
+      // Error saving data
+      console.log(error);
+    }
+  };
 
   render() {
     return (

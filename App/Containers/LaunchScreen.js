@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Image, View, Animated } from 'react-native';
+import { Text, Image, View, Animated, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
@@ -25,27 +25,41 @@ class LaunchScreen extends Component {
         toValue: 1,
         duration: 600,
       }),
-    ]).start(() => this.setAuth());
+    ]).start(() => {
+      this.setAuth(); // create user
+      this.navigateUser(); // if new user then navigate to onboarding
+    });
   }
 
   setAuth = () => {
     const auth = this.props.firebase.auth();
-    const { navigation } = this.props;
     auth.onAuthStateChanged(function(user) {
       if (user) {
         console.log('User is there!');
-        navigation.navigate('OnboardingScreen');
       } else {
         console.log('New User Registering...');
-        // TODO: Navigate user to onboarding screens
         auth
           .signInAnonymously()
-          .then(() => navigation.navigate('HomeScreen'))
+          .then(() => {})
           .catch(function(error) {
             console.error(error);
           });
       }
     });
+  };
+
+  navigateUser = async () => {
+    const { navigation } = this.props;
+    try {
+      const value = await AsyncStorage.getItem('onboarding');
+      if (value !== null) {
+        navigation.navigate('HomeScreen');
+      } else {
+        navigation.navigate('OnboardingScreen');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   render() {
