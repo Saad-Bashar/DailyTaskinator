@@ -1,4 +1,4 @@
-package com.dailytaskinator;
+package com.taskinator;
 
 import android.app.Application;
 
