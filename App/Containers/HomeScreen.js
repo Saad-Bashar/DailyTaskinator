@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, LayoutAnimation, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, LayoutAnimation, TouchableOpacity, AsyncStorage } from 'react-native';
 import AddTaskModal from './AddTaskModal';
 import moment from 'moment';
 import { firebaseConnect, getFirebase } from 'react-redux-firebase';
@@ -31,6 +31,7 @@ class HomeScreen extends Component {
     };
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     props.navigation.setParams({ selectedDate: moment().format('YYYY-MM-DD') });
+    props.navigation.setParams({ deviceId: props.deviceId.id });
     props.setSelectedDate(moment().format('YYYY-MM-DD'));
   }
 
@@ -47,6 +48,7 @@ class HomeScreen extends Component {
   render() {
     const selectedDate = this.props.navigation.getParam('selectedDate', '');
     const { modalVisible, isTimeline } = this.state;
+    console.log('Props ', this.props);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity
@@ -83,20 +85,22 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  const uid = getFirebase().auth().currentUser.uid;
   const selectedDate = state.selectedDate.selectedDate;
-  const dayTask = state.firebase.data.Users && state.firebase.data.Users[uid][selectedDate];
+  const deviceId = state.deviceId.id;
+  const dayTask = state.firebase.data.Users && state.firebase.data.Users[deviceId][selectedDate];
 
   return {
     tasks: dayTask && Object.entries(dayTask),
+    deviceId: state.deviceId,
   };
 };
 
 export default compose(
   firebaseConnect(props => {
-    const uid = getFirebase().auth().currentUser.uid;
-    const selectedDate = props.navigation.getParam('selectedDate', '');
-    return [{ path: `Users/${uid}/${selectedDate}` }];
+    const selectedDate = props.navigation.getParam('selectedDate', ''); // getting the date
+    const deviceId = props.navigation.getParam('deviceId', '');
+
+    return [{ path: `Users/${deviceId}/${selectedDate}` }]; // return the task of the user on the date
   }),
   connect(
     mapStateToProps,

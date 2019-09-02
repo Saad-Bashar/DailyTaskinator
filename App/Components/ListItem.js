@@ -26,8 +26,7 @@ class ListItem extends Component {
         checked: !this.state.checked,
       },
       () => {
-        const { firebase, selectedDate, item } = this.props;
-        const uid = getFirebase().auth().currentUser.uid;
+        const { firebase, selectedDate, item, deviceId } = this.props;
         const checked = this.state.checked;
 
         if (checked) {
@@ -41,7 +40,7 @@ class ListItem extends Component {
 
         firebase
           .database()
-          .ref(`/Users/${uid}/${selectedDate.selectedDate}/${item[0]}`)
+          .ref(`/Users/${deviceId.id}/${selectedDate.selectedDate}/${item[0]}`)
           .update({
             isComplete: checked,
           });
@@ -138,6 +137,7 @@ class ListItem extends Component {
 const mapStateToProps = state => {
   return {
     selectedDate: state.selectedDate,
+    deviceId: state.deviceId,
   };
 };
 

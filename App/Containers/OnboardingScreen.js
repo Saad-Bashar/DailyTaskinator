@@ -5,6 +5,8 @@ import { Images, Colors, Fonts } from '../Themes';
 import LottieView from 'lottie-react-native';
 import Swiper from 'react-native-swiper';
 import Emoji from 'react-native-emoji';
+import DeviceInfo from 'react-native-device-info';
+import DeviceInfoActions from '../Redux/DeviceInfoRedux';
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -201,6 +203,9 @@ class OnboardingScreen extends Component {
   }
 
   _storeData = async () => {
+    let id = DeviceInfo.getUniqueID();
+    this.props.setDeviceInfo(id);
+
     try {
       await AsyncStorage.setItem('onboarding', 'true');
     } catch (error) {
@@ -225,7 +230,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    setDeviceInfo: data => dispatch(DeviceInfoActions.deviceInfoSet(data)),
+  };
 };
 
 export default connect(

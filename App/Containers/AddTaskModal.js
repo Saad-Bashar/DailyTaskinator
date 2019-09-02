@@ -142,16 +142,18 @@ class AddTaskModal extends Component {
                 isComplete: false,
               }}
               onSubmit={values => {
-                console.log('Form Values ', values);
                 const { firebase } = this.props;
-                const uid = getFirebase().auth().currentUser.uid;
+                const { deviceId, selectedDate } = this.props;
+
                 firebase
                   .database()
-                  .ref(`/Users/${uid}/${this.props.selectedDate}`)
+                  .ref(`/Users/${deviceId.id}/${selectedDate}`)
                   .push(values, function(error) {
                     console.log(error);
                   });
+
                 this.props.setModalVisible(!this.props.visible);
+
                 showMessage({
                   message: 'Task Added Successfully',
                   type: 'success',
@@ -251,6 +253,7 @@ export default compose(
   connect(state => {
     return {
       auth: state.firebase.auth,
+      deviceId: state.deviceId,
     };
   })
 )(AddTaskModal);
