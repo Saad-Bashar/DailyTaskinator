@@ -11,6 +11,7 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
+import moment from 'moment';
 
 const validationSchema = yup.object().shape({
   taskName: yup
@@ -124,6 +125,7 @@ class EditTaskModal extends Component {
 
     const { taskName, taskContent, startTime, endTime, category } = this.props.item[1];
     const { selectedDate, item } = this.props;
+    let formattedDate = selectedDate && moment.utc(selectedDate).format('dddd DD MMM YY');
 
     return (
       <Modal
@@ -131,7 +133,7 @@ class EditTaskModal extends Component {
         transparent={false}
         visible={this.props.visible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          this.props.setModalVisible(!this.props.visible);
         }}
       >
         <View style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
@@ -146,6 +148,8 @@ class EditTaskModal extends Component {
                 <Icon name="close" size={20} color={Colors.bloodOrange} />
               </TouchableOpacity>
             </View>
+
+            <Text style={{ fontSize: 16, marginTop: 12, fontWeight: 'bold', color: '#000' }}>{formattedDate}</Text>
             <Formik
               initialValues={{
                 category: category,

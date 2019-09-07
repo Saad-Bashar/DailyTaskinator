@@ -9,6 +9,11 @@ createReactNavigationReduxMiddleware('root', state => state.nav);
 const ReduxAppNavigator = reduxifyNavigator(AppNavigation, 'root');
 
 class ReduxNavigation extends React.Component {
+  shouldCloseApp = nav => {
+    console.log('nav ', nav);
+    if (nav.routes[nav.routes.length - 1].routeName === 'HomeScreen') return true;
+  };
+
   componentDidMount() {
     if (Platform.OS === 'ios') return;
     BackHandler.addEventListener('hardwareBackPress', () => {
@@ -17,7 +22,7 @@ class ReduxNavigation extends React.Component {
       if (nav.routes.length === 1 && nav.routes[0].routeName === 'LaunchScreen') {
         return false;
       }
-      // if (shouldCloseApp(nav)) return false
+      if (this.shouldCloseApp(nav)) return BackHandler.exitApp();
       dispatch({ type: 'Navigation/BACK' });
       return true;
     });

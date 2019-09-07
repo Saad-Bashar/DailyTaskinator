@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Dimensions, Text } from 'react-native';
-import { TabView, TabBar } from 'react-native-tab-view';
+import { TabView, TabBar, PagerScroll } from 'react-native-tab-view';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import WorkIcon from 'react-native-vector-icons/MaterialIcons';
 import PersonalIcon from 'react-native-vector-icons/Ionicons';
@@ -46,6 +46,8 @@ export default class TaskScreen extends Component {
     );
   };
 
+  _handleIndexChange = index => this.setState({ index });
+
   render() {
     const { tasks } = this.props;
     const workTasks = tasks && tasks.filter(task => task[1].category === 'Work');
@@ -78,7 +80,7 @@ export default class TaskScreen extends Component {
             renderLabel={this._renderLabel}
           />
         )}
-        onIndexChange={index => this.setState({ index })}
+        onIndexChange={this._handleIndexChange}
         initialLayout={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
         tabBarPosition="bottom"
       />

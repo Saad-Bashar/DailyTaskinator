@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
 import Timeline from 'react-native-timeline-listview';
 import { ScrollView } from 'react-native-gesture-handler';
+import moment from 'moment';
 
 const validationSchema = yup.object().shape({
   taskName: yup
@@ -111,19 +112,23 @@ class AddTaskModal extends Component {
       },
     ];
 
+    const { selectedDate } = this.props;
+    let formattedDate = selectedDate && moment.utc(selectedDate).format('dddd DD MMM YY');
+
     return (
       <Modal
         animationType="slide"
         transparent={false}
         visible={this.props.visible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          this.props.setModalVisible(!this.props.visible);
         }}
       >
         <ScrollView style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>Create Task</Text>
+
               <TouchableOpacity
                 onPress={() => {
                   this.props.setModalVisible(!this.props.visible);
@@ -132,6 +137,8 @@ class AddTaskModal extends Component {
                 <Icon name="close" size={20} color={Colors.bloodOrange} />
               </TouchableOpacity>
             </View>
+
+            <Text style={{ fontSize: 16, marginTop: 12, fontWeight: 'bold', color: '#000' }}>{formattedDate}</Text>
             <Formik
               initialValues={{
                 category: '',
