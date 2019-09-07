@@ -48,7 +48,7 @@ class HomeScreen extends Component {
   render() {
     const selectedDate = this.props.navigation.getParam('selectedDate', '');
     const { modalVisible, isTimeline } = this.state;
-    console.log('Props ', this.props);
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity

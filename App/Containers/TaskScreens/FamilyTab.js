@@ -21,10 +21,14 @@ export default class FamilyTab extends Component {
   render() {
     const { tasks } = this.props;
 
-    console.log('tasks ', tasks);
-
     if (!tasks || (tasks && tasks.length <= 0)) {
-      return <EmptyState textStyle={{ marginTop: scale(20)}} text={'Spend sometime with your family today'} image={Images.notFoundFamily} />;
+      return (
+        <EmptyState
+          textStyle={{ marginTop: scale(20) }}
+          text={'Spend sometime with your family today'}
+          image={Images.notFoundFamily}
+        />
+      );
     }
 
     return (

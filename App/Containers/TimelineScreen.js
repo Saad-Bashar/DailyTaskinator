@@ -8,7 +8,8 @@ import Timeline from '../Lib/react-native-timeline-listview';
 
 // Styles
 import styles from './Styles/TimelineScreenStyle';
-import { Colors } from '../Themes';
+import { Colors, Images } from '../Themes';
+import EmptyState from '../Components/EmptyState';
 
 class TimelineScreen extends Component {
   // constructor (props) {
@@ -60,6 +61,10 @@ class TimelineScreen extends Component {
 
     const filteredTasks = this.getFilteredArray(tasks && tasks);
 
+    if (!filteredTasks || (filteredTasks && filteredTasks.length <= 0)) {
+      return <EmptyState image={Images.notFound} text={'No task added yet'} />;
+    }
+
     return (
       <ScrollView style={styles.container}>
         <Timeline
@@ -105,14 +110,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(TimelineScreen);
-
-// var movies = [
-//   {title: 'The Godfather', rating: 9.2, release: '11:02'},
-//   {title: 'The Godfather: Part II', rating: 9.0, release: '9:20'},
-//   {title: 'The Shawshank Redemption', rating: 9.3, release: '17:26'},
-//   {title: 'The Shawshank Redemption', rating: 9.3, release: '6:30'},
-// ];
-
-// movies.sort(function(a, b) {
-//   return a.release.split(':').join('') - b.release.split(':').join('');
-// });

@@ -10,7 +10,6 @@ const ReduxAppNavigator = reduxifyNavigator(AppNavigation, 'root');
 
 class ReduxNavigation extends React.Component {
   shouldCloseApp = nav => {
-    console.log('nav ', nav);
     if (nav.routes[nav.routes.length - 1].routeName === 'HomeScreen') return true;
   };
 

@@ -62,8 +62,6 @@ class AddTaskModal extends Component {
     let startTime = hours + ':' + mins;
     startTime = this.getAmPmValue(startTime.split(':'));
 
-    console.log('startTime ', startTime);
-
     this.state.formikProps.setFieldValue('startTime', startTime);
     this._hideStartDateTimePicker();
   };

@@ -60,8 +60,6 @@ class EditTaskModal extends Component {
     let startTime = hours + ':' + mins;
     startTime = this.getAmPmValue(startTime.split(':'));
 
-    console.log('startTime ', startTime);
-
     this.state.formikProps.setFieldValue('startTime', startTime);
     this._hideStartDateTimePicker();
   };
@@ -159,7 +157,6 @@ class EditTaskModal extends Component {
                 endTime: endTime,
               }}
               onSubmit={values => {
-                console.log('Form Values ', values);
                 const { firebase, deviceId } = this.props;
 
                 firebase
