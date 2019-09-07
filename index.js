@@ -8,4 +8,4 @@ require('core-js/fn/map');
 require('core-js/fn/set');
 require('core-js/fn/array/find');
 
-AppRegistry.registerComponent('DailyTaskinator', () => App);
+AppRegistry.registerComponent('Taskinator', () => App);

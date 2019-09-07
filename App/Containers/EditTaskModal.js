@@ -7,15 +7,21 @@ import { Colors, Fonts, Metrics } from '../Themes';
 import Input from '../Components/Input';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { firebaseConnect, getFirebase } from 'react-redux-firebase';
-import { compose } from 'redux'
+import { firebaseConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { showMessage, hideMessage } from "react-native-flash-message";
-
+import { showMessage } from 'react-native-flash-message';
+import moment from 'moment';
 
 const validationSchema = yup.object().shape({
-  taskName: yup.string().label('Task Name').required(),
-  category: yup.string().label('Category').required()
+  taskName: yup
+    .string()
+    .label('Task Name')
+    .required(),
+  category: yup
+    .string()
+    .label('Category')
+    .required(),
 });
 
 class EditTaskModal extends Component {
@@ -27,70 +33,99 @@ class EditTaskModal extends Component {
     };
   }
 
-  _showStartDateTimePicker = (formikProps) => { 
-    Keyboard.dismiss(); 
+  getAmPmValue = value => {
+    let hours = parseInt(value[0]);
+    let minutes = parseInt(value[1]);
+
+    let ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    return hours + ':' + minutes + ' ' + ampm;
+  };
+
+  _showStartDateTimePicker = formikProps => {
+    Keyboard.dismiss();
     this.setState({ isStartDateTimePickerVisible: true, formikProps });
-  }
+  };
 
-  _hideStartDateTimePicker = () => this.setState({ isStartDateTimePickerVisible : false });
+  _hideStartDateTimePicker = () => this.setState({ isStartDateTimePickerVisible: false });
 
-  _handleStartDatePicked = (date) => {
+  _handleStartDatePicked = date => {
     let cusdate = date;
-    let startTime = cusdate.getHours() + ":" + cusdate.getMinutes();
-    
+    const hours = date.getHours();
+    const mins = ('0' + cusdate.getMinutes()).slice(-2);
+
+    let startTime = hours + ':' + mins;
+    startTime = this.getAmPmValue(startTime.split(':'));
+
+    console.log('startTime ', startTime);
+
     this.state.formikProps.setFieldValue('startTime', startTime);
     this._hideStartDateTimePicker();
   };
 
-  _showEndDateTimePicker = (formikProps) => { 
-    Keyboard.dismiss(); 
+  _showEndDateTimePicker = formikProps => {
+    Keyboard.dismiss();
     this.setState({ isEndDateTimePickerVisible: true, formikProps });
-  }
+  };
 
-  _hideEndDateTimePicker = () => this.setState({ 
-    isEndDateTimePickerVisible: false 
-  });
+  _hideEndDateTimePicker = () =>
+    this.setState({
+      isEndDateTimePickerVisible: false,
+    });
 
-  _handleEndDatePicked = (date) => {
+  _handleEndDatePicked = date => {
     let cusdate = date;
-    const hours = date.getHours()
+    const hours = date.getHours();
     const mins = ('0' + cusdate.getMinutes()).slice(-2);
-    let endTime = hours + ":" + mins;
-    
+    let endTime = hours + ':' + mins;
+
+    endTime = this.getAmPmValue(endTime.split(':'));
+
     this.state.formikProps.setFieldValue('endTime', endTime);
     this._hideEndDateTimePicker();
   };
 
-  onChangeCategory = (cat) => {
+  onChangeCategory = cat => {
     this.setState({
-      taskCategory: cat
+      taskCategory: cat,
     });
-  }
+  };
 
   delete = () => {
-    const { firebase, selectedDate, setModalVisible, visible, item } = this.props;
-    const uid = getFirebase().auth().currentUser.uid;
-    firebase.database().ref(`/Users/${uid}/${selectedDate}/${item[0]}`).remove();
+    const { firebase, selectedDate, setModalVisible, visible, item, deviceId } = this.props;
+    firebase
+      .database()
+      .ref(`/Users/${deviceId.id}/${selectedDate}/${item[0]}`)
+      .remove();
     setModalVisible(!visible);
     showMessage({
-      message: "Deleted Successfully!",
-      type: "danger",
+      message: 'Deleted Successfully!',
+      type: 'danger',
     });
-  }
+  };
 
   render() {
-    let data = [{
+    let data = [
+      {
         value: 'Islam',
-      }, {
+      },
+      {
         value: 'Family',
-      }, {
+      },
+      {
         value: 'Work',
-    }, {
-        value: 'Personal'
-    }];
+      },
+      {
+        value: 'Personal',
+      },
+    ];
 
     const { taskName, taskContent, startTime, endTime, category } = this.props.item[1];
     const { selectedDate, item } = this.props;
+    let formattedDate = selectedDate && moment.utc(selectedDate).format('dddd DD MMM YY');
 
     return (
       <Modal
@@ -98,55 +133,62 @@ class EditTaskModal extends Component {
         transparent={false}
         visible={this.props.visible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
+          this.props.setModalVisible(!this.props.visible);
+        }}
+      >
         <View style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>
-                Edit Task
-              </Text>
+              <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>Edit Task</Text>
               <TouchableOpacity
                 onPress={() => {
                   this.props.setModalVisible(!this.props.visible);
                 }}
               >
-                <Icon 
-                  name="close"
-                  size={20}
-                  color={Colors.bloodOrange}
-                />
+                <Icon name="close" size={20} color={Colors.bloodOrange} />
               </TouchableOpacity>
             </View>
+
+            <Text style={{ fontSize: 16, marginTop: 12, fontWeight: 'bold', color: '#000' }}>{formattedDate}</Text>
             <Formik
-              initialValues={{ category: category, taskName: taskName, taskContent: taskContent, startTime: startTime, endTime: endTime }}
-              onSubmit={(values) => {
+              initialValues={{
+                category: category,
+                taskName: taskName,
+                taskContent: taskContent,
+                startTime: startTime,
+                endTime: endTime,
+              }}
+              onSubmit={values => {
                 console.log('Form Values ', values);
-                const { firebase } = this.props;
-                const uid = getFirebase().auth().currentUser.uid;
-                firebase.database().ref(`/Users/${uid}/${selectedDate}/${item[0]}`).update({
-                  taskName: values.taskName,
-                  category: values.category,
-                  taskContent: values.taskContent,
-                  startTime: values.startTime,
-                  endTime: values.endTime
-                });
-                this.props.setModalVisible(!this.props.visible)
+                const { firebase, deviceId } = this.props;
+
+                firebase
+                  .database()
+                  .ref(`/Users/${deviceId.id}/${selectedDate}/${item[0]}`)
+                  .update({
+                    taskName: values.taskName,
+                    category: values.category,
+                    taskContent: values.taskContent,
+                    startTime: values.startTime,
+                    endTime: values.endTime,
+                  });
+                this.props.setModalVisible(!this.props.visible);
                 showMessage({
-                  message: "Updated Successfully!",
-                  type: "success",
+                  message: 'Updated Successfully!',
+                  type: 'success',
                 });
               }}
               validationSchema={validationSchema}
             >
-
               {formikProps => (
-                <React.Fragment>  
+                <React.Fragment>
                   <Dropdown
-                    label='Select Categories *'
+                    label="Select Categories *"
                     data={data}
-                    baseColor={ Colors.bloodOrange }
-                    onChangeText={(value) => {formikProps.setFieldValue('category', value);}}
+                    baseColor={Colors.bloodOrange}
+                    onChangeText={value => {
+                      formikProps.setFieldValue('category', value);
+                    }}
                     value={formikProps.values['category']}
                   />
                   <Text style={{ color: 'red' }}>
@@ -167,34 +209,49 @@ class EditTaskModal extends Component {
                     onChangeText={formikProps.handleChange('taskContent')}
                     value={formikProps.values['taskContent']}
                   />
-                  <Input
-                    label={'Start Time'}
-                    onFocus={() => this._showStartDateTimePicker(formikProps)}
-                    value={formikProps.values['startTime']}
-                  />
-                  <Input
-                    label={'End Time'}
-                    onFocus={() => this._showEndDateTimePicker(formikProps)}
-                    value={formikProps.values['endTime']}
-                  />
+
+                  <TouchableOpacity
+                    style={{ borderBottomColor: Colors.bloodOrange, borderBottomWidth: 1, marginVertical: 25 }}
+                    onPress={() => this._showStartDateTimePicker(formikProps)}
+                  >
+                    <Text style={{ color: Colors.bloodOrange, fontSize: 16, paddingVertical: 10 }}>
+                      {formikProps.values['startTime'] ? formikProps.values['startTime'] : 'Start Time'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{ borderBottomColor: Colors.bloodOrange, borderBottomWidth: 1 }}
+                    onPress={() => this._showEndDateTimePicker(formikProps)}
+                  >
+                    <Text style={{ color: Colors.bloodOrange, fontSize: 16, paddingVertical: 10 }}>
+                      {formikProps.values['endTime'] ? formikProps.values['endTime'] : 'End Time'}
+                    </Text>
+                  </TouchableOpacity>
+
                   <View style={{ flexDirection: 'row', marginTop: 60, justifyContent: 'center' }}>
                     <TouchableOpacity
                       style={{ width: 150, borderRadius: 5, backgroundColor: Colors.bloodOrange, padding: 10 }}
                       onPress={formikProps.handleSubmit}
                     >
-                      <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Update</Text>
+                      <Text
+                        style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}
+                      >
+                        Update
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{ width: 150, borderRadius: 5, backgroundColor: Colors.fire, padding: 10, marginLeft: 10 }}
                       onPress={this.delete}
                     >
-                      <Text style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}>Delete</Text>
+                      <Text
+                        style={{ fontSize: Fonts.size.h6, color: Colors.snow, textAlign: 'center', fontWeight: '600' }}
+                      >
+                        Delete
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                  
-                </React.Fragment>  
+                </React.Fragment>
               )}
-
             </Formik>
             <DateTimePicker
               isVisible={this.state.isStartDateTimePickerVisible}
@@ -217,11 +274,10 @@ class EditTaskModal extends Component {
 
 export default compose(
   firebaseConnect(() => {}),
-  connect(
-    (state) => {
-      return {
-        auth: state.firebase.auth
-      }
-    } 
-  )
+  connect(state => {
+    return {
+      auth: state.firebase.auth,
+      deviceId: state.deviceId,
+    };
+  })
 )(EditTaskModal);

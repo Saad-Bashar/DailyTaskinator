@@ -25,31 +25,12 @@ class LaunchScreen extends Component {
         toValue: 1,
         duration: 600,
       }),
-    ]).start(() => {
-      this.setAuth(); // create user
-      this.navigateUser(); // if new user then navigate to onboarding
-    });
+    ]).start(() => this.navigateUser());
   }
-
-  setAuth = () => {
-    const auth = this.props.firebase.auth();
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
-        console.log('User is there!');
-      } else {
-        console.log('New User Registering...');
-        auth
-          .signInAnonymously()
-          .then(() => {})
-          .catch(function(error) {
-            console.error(error);
-          });
-      }
-    });
-  };
 
   navigateUser = async () => {
     const { navigation } = this.props;
+
     try {
       const value = await AsyncStorage.getItem('onboarding');
       if (value !== null) {
