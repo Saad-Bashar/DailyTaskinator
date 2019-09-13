@@ -70,9 +70,9 @@ class HomeScreen extends Component {
           <TaskScreen navigation={this.props.navigation} tasks={this.props.tasks && this.props.tasks} />
         )}
 
-        <RoundedIcon onPress={() => this.setModalVisible(true)} />
+        {/* <RoundedIcon onPress={() => this.setModalVisible(true)} />
 
-        <AddTaskModal visible={modalVisible} setModalVisible={this.setModalVisible} selectedDate={selectedDate} />
+        <AddTaskModal visible={modalVisible} setModalVisible={this.setModalVisible} selectedDate={selectedDate} /> */}
       </SafeAreaView>
     );
   }

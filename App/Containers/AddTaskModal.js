@@ -20,10 +20,6 @@ const validationSchema = yup.object().shape({
     .string()
     .label('Task Name')
     .required(),
-  category: yup
-    .string()
-    .label('Category')
-    .required(),
 });
 
 class AddTaskModal extends Component {
@@ -110,8 +106,9 @@ class AddTaskModal extends Component {
       },
     ];
 
-    const { selectedDate } = this.props;
+    const { selectedDate, category } = this.props;
     let formattedDate = selectedDate && moment.utc(selectedDate).format('dddd DD MMM YY');
+    console.log('props ', this.props);
 
     return (
       <Modal
@@ -139,7 +136,6 @@ class AddTaskModal extends Component {
             <Text style={{ fontSize: 16, marginTop: 12, fontWeight: 'bold', color: '#000' }}>{formattedDate}</Text>
             <Formik
               initialValues={{
-                category: '',
                 taskName: '',
                 taskContent: '',
                 startTime: '',
@@ -149,6 +145,7 @@ class AddTaskModal extends Component {
               onSubmit={values => {
                 const { firebase } = this.props;
                 const { deviceId, selectedDate } = this.props;
+                values.category = this.props.category;
 
                 firebase
                   .database()
@@ -168,16 +165,15 @@ class AddTaskModal extends Component {
             >
               {formikProps => (
                 <React.Fragment>
-                  <Dropdown
-                    label="Select Categories *"
-                    data={data}
-                    baseColor={Colors.bloodOrange}
-                    onChangeText={value => {
-                      formikProps.setFieldValue('category', value);
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      marginTop: 25,
+                      fontWeight: 'bold',
+                      color: Colors[category && category.toLowerCase()],
                     }}
-                  />
-                  <Text style={{ color: 'red' }}>
-                    {formikProps.touched['category'] && formikProps.errors['category']}
+                  >
+                    {category && category.toUpperCase()}
                   </Text>
 
                   <Input

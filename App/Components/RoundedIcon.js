@@ -1,40 +1,36 @@
 import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign'
-import { Colors } from '../Themes'
+import Icon from 'react-native-vector-icons/AntDesign';
+import { Colors } from '../Themes';
 import CardStyle from './Styles/CardStyle';
-
 
 export default class RoundedIcon extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
+    const { backgroundColor } = this.props;
     return (
       <TouchableOpacity
         style={{
           ...CardStyle.containerStyle,
-          position: 'absolute',
+          // position: 'absolute',
           width: 50,
           height: 50,
           borderRadius: 25,
           alignItems: 'center',
           justifyContent: 'center',
-          right: 30,
-          bottom: 80, 
-          backgroundColor: Colors.bloodOrange,
-          
+          // right: 30,
+          // bottom: 80,
+          marginBottom: 25,
+          marginRight: 25,
+          backgroundColor: backgroundColor,
         }}
         onPress={this.props.onPress}
       >
-        <Icon 
-          name="plus"
-          size={24}
-          color={Colors.snow}
-        />
+        <Icon name="plus" size={24} color={Colors.snow} />
       </TouchableOpacity>
     );
   }
