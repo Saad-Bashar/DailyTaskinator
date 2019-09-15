@@ -33,9 +33,10 @@ class TimelineScreen extends Component {
   };
 
   getFilteredArray = tasks => {
+    let removeReflection = tasks && tasks.filter(task => task[0] !== 'reflection');
     const filteredTask =
-      tasks &&
-      tasks.sort(function(a, b) {
+    removeReflection &&
+    removeReflection.sort(function(a, b) {
         return new Date('1970/01/01 ' + a[1].startTime) - new Date('1970/01/01 ' + b[1].startTime);
       });
 
@@ -60,9 +61,8 @@ class TimelineScreen extends Component {
     const { tasks } = this.props;
 
     const filteredTasks = this.getFilteredArray(tasks && tasks);
-
     if (!filteredTasks || (filteredTasks && filteredTasks.length <= 0)) {
-      return <EmptyState image={Images.notFound} text={'No task added yet'} />;
+      return <EmptyState image={Images.noTime} text={'No task added in your timeline yet'} />;
     }
 
     return (

@@ -29,7 +29,7 @@ class HomeScreen extends Component {
         { key: 'third', title: 'Work' },
         { key: 'fourth', title: 'Personal' },
       ],
-      open: false
+      open: false,
     };
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     props.navigation.setParams({ selectedDate: moment().format('YYYY-MM-DD') });
@@ -39,15 +39,15 @@ class HomeScreen extends Component {
 
   onOpened = () => {
     this.setState({
-      open: true
-    })
-  }
+      open: true,
+    });
+  };
 
   onClosed = () => {
     this.setState({
-      open: false
-    })
-  }
+      open: false,
+    });
+  };
 
   renderInner = () => {
     const { tasks } = this.props;
@@ -72,16 +72,12 @@ class HomeScreen extends Component {
     const { open } = this.state;
 
     return (
-      <View style={styles.header}>
-      <Icon name={open ? "ios-arrow-down" : "ios-arrow-up"} style={{ fontSize: 20, height: 22, color: 'white' }} />
-      <Text style={[styles.panelButtonTitle]}>TODAY'S REFLECTION</Text>
-    </View>
-    )
-  }
-    
-
-  
-  
+      <View style={styles.header}>        
+        <Icon name={open ? 'ios-arrow-down' : 'ios-arrow-up'} style={{ fontSize: 20, height: 22, color: 'white' }} />
+        <Text style={[styles.panelButtonTitle]}>TODAY'S JOURNAL</Text>
+      </View>
+    );
+  };
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible });

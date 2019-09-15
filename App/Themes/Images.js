@@ -6,6 +6,7 @@ const images = {
   notFoundFamily: require('../Images/not-found-family.png'),
   notFoundWork: require('../Images/not-found-work.png'),
   notFoundPersonal: require('../Images/not-found-personal.png'),
+  noTime: require('../Images/no-time.png'),
 };
 
 export default images;

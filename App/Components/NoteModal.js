@@ -24,7 +24,6 @@ export default class NoteModal extends Component {
 
   constructor(props) {
     super(props);
-    console.log('props ', props.reflection);
     this.state = {
       text: props.reflection ? props.reflection : '',
     };
