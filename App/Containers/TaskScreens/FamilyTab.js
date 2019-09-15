@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
 import ListItem from '../../Components/ListItem';
-import { TabHeader } from '../../Components/TabHeader';
 import { Images, Colors } from '../../Themes';
 import EmptyState from '../../Components/EmptyState';
 import { scale } from 'react-native-size-matters';
-import RoundedIcon from '../../Components/RoundedIcon';
 import AddTaskModal from '../AddTaskModal';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import FloatingButton from '../../Components/FloatingButton';
+import NoteModal from '../../Components/NoteModal';
+import { firebaseConnect } from 'react-redux-firebase';
 
 class FamilyTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
+      noteModal: false,
     };
   }
 
@@ -28,9 +30,24 @@ class FamilyTab extends Component {
     this.setState({ modalVisible: visible });
   };
 
+  setNoteModalVisible = visible => {
+    this.setState({ noteModal: visible });
+  };
+
+  updateTask = reflection => {
+    const { firebase, selectedDate, deviceId } = this.props;
+
+    firebase
+      .database()
+      .ref(`/Users/${deviceId}/${selectedDate}`)
+      .update({
+        reflection,
+      });
+  };
+
   render() {
-    const { tasks, selectedDate } = this.props;
-    const { modalVisible } = this.state;
+    const { tasks, selectedDate, reflection } = this.props;
+    const { modalVisible, noteModal } = this.state;
 
     if (!tasks || (tasks && tasks.length <= 0)) {
       return (
@@ -44,7 +61,6 @@ class FamilyTab extends Component {
           </View>
 
           <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-            <RoundedIcon backgroundColor={Colors.family} onPress={() => this.setModalVisible(true)} />
             <AddTaskModal
               category={'Family'}
               visible={modalVisible}
@@ -52,6 +68,19 @@ class FamilyTab extends Component {
               selectedDate={selectedDate}
             />
           </View>
+
+          <NoteModal
+            reflection={reflection && reflection}
+            save={this.updateTask}
+            closeModal={this.setNoteModalVisible}
+            visible={noteModal}
+          />
+
+          <FloatingButton
+            addAction={this.setModalVisible}
+            color={Colors.family}
+            noteAction={this.setNoteModalVisible}
+          />
         </View>
       );
     }
@@ -65,7 +94,6 @@ class FamilyTab extends Component {
           contentContainerStyle={{ padding: 20 }}
         />
         <View style={{ position: 'absolute', bottom: 0, right: 0 }}>
-          <RoundedIcon backgroundColor={Colors.family} onPress={() => this.setModalVisible(true)} />
           <AddTaskModal
             category={'Family'}
             visible={modalVisible}
@@ -73,6 +101,15 @@ class FamilyTab extends Component {
             selectedDate={selectedDate}
           />
         </View>
+
+        <NoteModal
+          reflection={reflection && reflection}
+          save={this.updateTask}
+          closeModal={this.setNoteModalVisible}
+          visible={noteModal}
+        />
+
+        <FloatingButton addAction={this.setModalVisible} color={Colors.family} noteAction={this.setNoteModalVisible} />
       </View>
     );
   }
@@ -95,6 +132,7 @@ const mapStateToProps = state => {
 };
 
 export default compose(
+  firebaseConnect(props => {}),
   connect(
     mapStateToProps,
     mapDispatchToProps

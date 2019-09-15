@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Dimensions, Text } from 'react-native';
-import { TabView, TabBar, PagerScroll } from 'react-native-tab-view';
+import { TabView, TabBar } from 'react-native-tab-view';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import WorkIcon from 'react-native-vector-icons/MaterialIcons';
 import PersonalIcon from 'react-native-vector-icons/Ionicons';
@@ -49,7 +49,7 @@ export default class TaskScreen extends Component {
   _handleIndexChange = index => this.setState({ index });
 
   render() {
-    const { tasks } = this.props;
+    const { tasks, reflection } = this.props;
     const workTasks = tasks && tasks.filter(task => task[1].category === 'Work');
     const familyTasks = tasks && tasks.filter(task => task[1].category === 'Family');
     const personalTasks = tasks && tasks.filter(task => task[1].category === 'Personal');
@@ -61,13 +61,13 @@ export default class TaskScreen extends Component {
         renderScene={({ route }) => {
           switch (route.key) {
             case 'first':
-              return <IslamTab tasks={islamTasks} />;
+              return <IslamTab reflection={reflection && reflection} tasks={islamTasks} />;
             case 'second':
-              return <FamilyTab tasks={familyTasks} />;
+              return <FamilyTab reflection={reflection && reflection} tasks={familyTasks} />;
             case 'third':
-              return <WorkTab tasks={workTasks} />;
+              return <WorkTab reflection={reflection && reflection} tasks={workTasks} />;
             case 'fourth':
-              return <PersonalTab tasks={personalTasks} />;
+              return <PersonalTab reflection={reflection && reflection} tasks={personalTasks} />;
             default:
               return null;
           }

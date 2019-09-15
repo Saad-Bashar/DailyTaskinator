@@ -108,7 +108,6 @@ class AddTaskModal extends Component {
 
     const { selectedDate, category } = this.props;
     let formattedDate = selectedDate && moment.utc(selectedDate).format('dddd DD MMM YY');
-    console.log('props ', this.props);
 
     return (
       <Modal
