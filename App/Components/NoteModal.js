@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import styles from './Styles/NoteModalStyle';
 import Textarea from 'react-native-textarea';
+import { Text } from 'react-native';
 
-import Modal, {
-  ModalTitle,
-  ModalContent,
-  SlideAnimation,
-} from 'react-native-modals';
+import Modal, { ModalTitle, ModalContent, SlideAnimation } from 'react-native-modals';
 import { Colors } from '../Themes';
 
 export default class NoteModal extends Component {
@@ -31,9 +28,12 @@ export default class NoteModal extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.reflection !== this.props.reflection) {
-      this.setState({
-        text: this.props.reflection && this.props.reflection[0][1],
-      });
+      let reflection = this.props.reflection;
+      if (reflection && reflection.length > 0) {
+        this.setState({
+          text: reflection && reflection[0][1],
+        });
+      }
     }
   }
 
@@ -76,6 +76,10 @@ export default class NoteModal extends Component {
             autoFocus={true}
             defaultValue={text}
           />
+
+          <Text style={{ fontSize: 14, color: Colors.bloodOrange, alignSelf: 'flex-end', marginTop: 12 }}>
+            Swipe to dismiss
+          </Text>
         </ModalContent>
       </Modal>
     );

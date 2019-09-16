@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CalendarStrip from 'react-native-calendar-strip';
-import styles from './Styles/CalendarStyles'
+import styles from './Styles/CalendarStyles';
 import { Colors } from '../Themes';
 
 export default class Calendar extends Component {

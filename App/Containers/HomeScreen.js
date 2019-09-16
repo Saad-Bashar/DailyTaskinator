@@ -53,7 +53,7 @@ class HomeScreen extends Component {
     const { tasks } = this.props;
     let reflection = tasks && tasks.filter(task => task[0] === 'reflection');
 
-    if (reflection) {
+    if (reflection && reflection.length > 0) {
       return (
         <View style={styles.panel}>
           <Text style={styles.panelSubtitle}>{reflection[0][1]}</Text>
@@ -72,7 +72,7 @@ class HomeScreen extends Component {
     const { open } = this.state;
 
     return (
-      <View style={styles.header}>        
+      <View style={styles.header}>
         <Icon name={open ? 'ios-arrow-down' : 'ios-arrow-up'} style={{ fontSize: 20, height: 22, color: 'white' }} />
         <Text style={[styles.panelButtonTitle]}>TODAY'S JOURNAL</Text>
       </View>
