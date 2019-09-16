@@ -118,7 +118,10 @@ class AddTaskModal extends Component {
           this.props.setModalVisible(!this.props.visible);
         }}
       >
-        <ScrollView style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}
+        >
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>Create Task</Text>

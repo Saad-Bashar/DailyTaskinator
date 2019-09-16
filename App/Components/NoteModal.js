@@ -78,7 +78,7 @@ export default class NoteModal extends Component {
           />
 
           <Text style={{ fontSize: 14, color: Colors.bloodOrange, alignSelf: 'flex-end', marginTop: 12 }}>
-            Swipe to dismiss
+            Swipe to dismiss / save
           </Text>
         </ModalContent>
       </Modal>

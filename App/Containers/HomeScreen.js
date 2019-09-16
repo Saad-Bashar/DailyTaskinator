@@ -72,7 +72,7 @@ class HomeScreen extends Component {
     const { open } = this.state;
 
     return (
-      <View style={styles.header}>
+      <View style={[styles.header, open && { borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
         <Icon name={open ? 'ios-arrow-down' : 'ios-arrow-up'} style={{ fontSize: 20, height: 22, color: 'white' }} />
         <Text style={[styles.panelButtonTitle]}>TODAY'S JOURNAL</Text>
       </View>

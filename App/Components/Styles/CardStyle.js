@@ -3,14 +3,8 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   containerStyle: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    borderRadius: 8,
-    elevation: 5,
+    borderRadius: 4,
+    elevation: 2,
+    borderColor: '#fafafa',
   },
 });

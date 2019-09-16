@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Modal, TouchableOpacity, Keyboard } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -134,7 +134,7 @@ class EditTaskModal extends Component {
           this.props.setModalVisible(!this.props.visible);
         }}
       >
-        <View style={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
+        <ScrollView contentContainerStyle={{ marginTop: Metrics.navBarHeight, paddingHorizontal: 25 }}>
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: Colors.bloodOrange, fontSize: Fonts.size.h6 }}>Edit Task</Text>
@@ -263,7 +263,7 @@ class EditTaskModal extends Component {
               onCancel={this._hideEndDateTimePicker}
             />
           </View>
-        </View>
+        </ScrollView>
       </Modal>
     );
   }
